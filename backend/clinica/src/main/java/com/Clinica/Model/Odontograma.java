@@ -1,6 +1,7 @@
 package com.Clinica.Model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,7 @@ public class Odontograma {
     @JoinColumn(name = "id_odontologo", nullable = false)
     private Usuario odontologo;
 
-    @Column(name = "fecha_evaluacion", insertable = false, updatable = false)
+    @Column(name = "fecha_evaluacion")
     private LocalDateTime fechaEvaluacion;
 
     private String tipo; // INICIAL o EVOLUCION
@@ -55,4 +56,6 @@ public class Odontograma {
 
     public List<DetalleOdontograma> getDetalles() { return detalles; }
     public void setDetalles(List<DetalleOdontograma> detalles) { this.detalles = detalles; }
+    
+
 }

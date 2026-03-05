@@ -23,13 +23,11 @@ public class DetalleOdontograma {
     
     @Column(name = "estado_actual")
     private String estadoActual;
-    
+    @Column(name = "notas")
     private String notas;
 
-    // --- CONSTRUCTORES ---
     public DetalleOdontograma() {}
 
-    // --- GETTERS Y SETTERS ---
     public Integer getIdDetalle() { return idDetalle; }
     public void setIdDetalle(Integer idDetalle) { this.idDetalle = idDetalle; }
 
