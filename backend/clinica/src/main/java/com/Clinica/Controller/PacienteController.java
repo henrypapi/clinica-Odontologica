@@ -22,4 +22,11 @@ public class PacienteController {
         List<Paciente> pacientes = pacienteRepository.findAll();
         return ResponseEntity.ok(pacientes);
     }
+    @PostMapping
+    public ResponseEntity<Paciente> registrarPaciente(@RequestBody Paciente nuevoPaciente) {
+        // Spring Data JPA tomará el JSON, lo convertirá a tu clase Paciente 
+        // y lo guardará en la base de datos
+        Paciente pacienteGuardado = pacienteRepository.save(nuevoPaciente);
+        return ResponseEntity.ok(pacienteGuardado);
+    }
 }

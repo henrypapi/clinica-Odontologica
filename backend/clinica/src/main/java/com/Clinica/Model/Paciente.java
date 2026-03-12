@@ -1,4 +1,4 @@
-    package com.Clinica.Model;
+package com.Clinica.Model;
 
 import jakarta.persistence.*;
 
@@ -12,7 +12,7 @@ public class Paciente {
     private Integer idPaciente;
 
     // Relación 1 a 1: Un Paciente es una Persona
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_persona", nullable = false, unique = true)
     private Persona persona;
 

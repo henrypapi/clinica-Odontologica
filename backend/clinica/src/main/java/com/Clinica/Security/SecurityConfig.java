@@ -28,7 +28,7 @@ public class SecurityConfig {
             
             // 2. Reglas de la puerta: Quién entra y quién no
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login").permitAll() // La taquilla de login es pública
+                .requestMatchers("/auth/login","/error").permitAll() // La taquilla de login es pública
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated() // TODO lo demás (ej. odontogramas) exige token
             )
@@ -69,6 +69,8 @@ public class SecurityConfig {
         
         // 3. ¿Qué cabeceras especiales permitimos? Authorization (nuestro Token) y Content-Type (nuestro JSON)
         configuration.setAllowedHeaders(java.util.Arrays.asList("Authorization", "Content-Type"));
+
+        configuration.setAllowedHeaders(java.util.Arrays.asList("*")); // <-- CAMBIA ESTO PARA EVITAR BLOQUEOS
         
         // Aplicamos estas reglas a TODAS las rutas de tu API ("/**")
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
