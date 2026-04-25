@@ -2,6 +2,7 @@ package com.Clinica.Model;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "persona")
@@ -10,46 +11,63 @@ public class Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_personas") // Ojo: en tu SQL dice 'id_personas' (plural)
-    private int id;
+    private Integer id;
 
+    @Column(name = "nombres")
     private String nombres;
+    @Column(name= "apellidos")
     private String apellidos;
 
     @Column(name = "numero_documento")
-    private int numeroDocumento;
+    private String numeroDocumento;
+    
+    @Column(name = "tipo_documento")
+    private String tipoDocumento;
 
+    @Column (name = "email")
     private String email;
+
+    @Column (name = "direccion")
     private String direccion;
 
     @Column(name = "fecha_nacimiento")
     private Date fechaNacimiento;
     
+    @Column (name = "sexo")
     private String sexo;
     
+    @CreationTimestamp
     @Column(name = "fecha_creacion")
     private Date fechaCreacion;
 
-    public Persona(int id, String nombres, String apellidos, int numeroDocumento, String email, String direccion, Date fechaNacimiento, String sexo, Date fechaCreacion) {
+    @Column (name = "telefono")
+    private String telefono;
+
+
+
+    public Persona(Integer id, String nombres, String apellidos, String numeroDocumento, String tipoDocumento, String email, String direccion, Date fechaNacimiento, String sexo, Date fechaCreacion, String telefono) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.numeroDocumento = numeroDocumento;
+        this.tipoDocumento = tipoDocumento;
         this.email = email;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
         this.sexo = sexo;
         this.fechaCreacion = fechaCreacion;
+        this.telefono = telefono;
     }
 
     public Persona(){
         
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -69,11 +87,11 @@ public class Persona {
         this.apellidos = apellidos;
     }
 
-    public int getNumeroDocumento() {
+    public String getNumeroDocumento() {
         return numeroDocumento;
     }
 
-    public void setNumeroDocumento(int numeroDocumento) {
+    public void setNumeroDocumento(String numeroDocumento) {
         this.numeroDocumento = numeroDocumento;
     }
 
@@ -117,5 +135,20 @@ public class Persona {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public String getTelefono(){
+        return telefono;
+    }
+
+    public void setTelefono(String telefono){
+        this.telefono = telefono;
+    }
+
+    public String getTipoDocumento(){
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento){
+        this.tipoDocumento = tipoDocumento;
+    }
     
 }
