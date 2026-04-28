@@ -27,11 +27,8 @@ export const routes: Routes = [
       { path: 'home', component: Home }, 
       { path: 'about', component: About },
       { path: 'services', component: Services },
-      { path: 'doctors', component: Doctors },
       { path: 'contact', component: Contact },
 
-      // --- B. COMPARTIDAS (Privadas: Dashboard, Perfil) ---
-      // Usamos 'loadComponent' (Lazy Loading) para no llenar de 'imports' la parte de arriba
       { 
         path: 'dashboard', 
         loadComponent: () => import('./features/shared-pages/dashboard/dashboard').then(m => m.Dashboard)
