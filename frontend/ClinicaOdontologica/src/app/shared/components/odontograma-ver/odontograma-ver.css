@@ -1,0 +1,180 @@
+.contenedor-principal {
+  display: flex;
+  gap: 20px; 
+  padding: 20px;
+  background-color: #f4f7f6;
+  height: 90vh;
+}
+.panel-paciente {
+  flex: 1; 
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 300px; 
+  overflow-y: auto;
+}
+
+.dato-fila {
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.btn-modo {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background-color: #006064;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.panel-odontograma {
+  flex: 3; 
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  /* BORRAMOS el display:flex y align-items: center */
+  display: block; 
+  overflow-y: auto;
+  overflow-x: auto; /* Esto crea la barra de desplazamiento horizontal */
+}
+
+.fila-dientes {
+  display: flex;
+  margin-bottom: 25px; /* Un poco más de espacio hacia abajo para que respiren */
+  /* BORRAMOS justify-content: center */
+  
+  /* LA MAGIA: Esto centra sin cortar la izquierda */
+  width: max-content; 
+  margin-left: auto;
+  margin-right: auto;
+}
+.bloque-nino {
+  margin: 30px 0; 
+}
+
+.cuadrante {
+  display: flex;
+  gap: 5px; 
+  flex-wrap: nowrap; /* <-- NUEVO: Mantiene los dientes pegados en línea */
+}
+
+.separador {
+  width: 40px; 
+}
+
+.modal-fondo {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-caja {
+  background: white; 
+  padding: 25px; 
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 300px; 
+  text-align: center;
+}
+
+.botones-opciones {
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+  margin: 20px 0;
+}
+
+.btn-opcion {
+  padding: 10px; 
+  border: none; 
+  cursor: pointer; 
+  font-weight: bold; 
+  border-radius: 4px;
+}
+
+.btn-opcion.rojo { background: #ffebee; color: #d32f2f; border: 1px solid #d32f2f; }
+.btn-opcion.azul { background: #e3f2fd; color: #1976d2; border: 1px solid #1976d2; }
+.btn-opcion.blanco { background: #f5f5f5; color: #333; border: 1px solid #ccc; }
+
+.btn-cancelar {
+  background: none; 
+  border: none; 
+  color: #666; 
+  cursor: pointer; 
+  text-decoration: underline;
+}
+
+.select-paciente {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.datos-paciente-box {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: 4px solid #006064;
+}
+
+.lista-historial {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-historial {
+  padding: 10px;
+  background-color: #e0f7fa;
+  border: 1px solid #b2ebf2;
+  color: #006064;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.btn-historial:hover {
+  background-color: #b2ebf2;
+}
+
+.panel-paciente::-webkit-scrollbar,
+.panel-odontograma::-webkit-scrollbar {
+  width: 8px;
+}
+
+.panel-paciente::-webkit-scrollbar-track,
+.panel-odontograma::-webkit-scrollbar-track {
+  background: #f4f7f6; 
+  border-radius: 4px;
+}
+
+.panel-paciente::-webkit-scrollbar-thumb,
+.panel-odontograma::-webkit-scrollbar-thumb {
+  background: #b2ebf2; /* Azul claro de tu paleta */
+  border-radius: 4px;
+}
+
+.panel-paciente::-webkit-scrollbar-thumb:hover,
+.panel-odontograma::-webkit-scrollbar-thumb:hover {
+  background: #006064; /* Azul oscuro de tu paleta */
+}

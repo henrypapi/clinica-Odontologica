@@ -1,0 +1,98 @@
+<div class="tarjeta-registro animacion-fade">
+    <div class="cabecera-registro">
+        <h2>📝 Registro de Nuevo Paciente</h2>
+        <p>Complete los datos del paciente para abrir su expediente clínico.</p>
+    </div>
+  
+    <div class="grid-formulario">
+        
+        <div class="grupo-input">
+            <label>Nombres <span class="req">*</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.persona.nombres" class="input-moderno" placeholder="Ej. Juan Carlos" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Apellidos <span class="req">*</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.persona.apellidos" class="input-moderno" placeholder="Ej. Pérez Gómez" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Tipo de documento <span class="req">*</span></label>
+            <select [(ngModel)]="nuevoPaciente.persona.tipoDocumento" (change)="cambiarDocumento()" class="input-moderno">
+                <option value="dni">DNI</option>
+                <option value="ce">Carnet de Extranjería</option>
+                <option value="pasaporte">Pasaporte</option>
+            </select>
+        </div>
+
+        <div class="grupo-input">
+            <label>Número de documento <span class="req">*</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.persona.numeroDocumento" 
+                   [maxLength]="docMaxLength" [pattern]="docPattern" [placeholder]="docPlaceholder" class="input-moderno">
+        </div>
+
+        <div class="grupo-input">
+            <label>Correo Electrónico <span class="req">*</span></label>
+            <input type="email" [(ngModel)]="nuevoPaciente.persona.email" class="input-moderno" placeholder="correo@ejemplo.com" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Teléfono <span class="req">*</span></label>
+            <input type="tel" [(ngModel)]="nuevoPaciente.persona.telefono" class="input-moderno" placeholder="999 888 777" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Dirección <span class="req">*</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.persona.direccion" class="input-moderno" placeholder="Av. Principal 123" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Fecha de Nacimiento <span class="req">*</span></label>
+            <input type="date" [(ngModel)]="nuevoPaciente.persona.fechaNacimiento" class="input-moderno" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Sexo <span class="req">*</span></label>
+            <select [(ngModel)]="nuevoPaciente.persona.sexo" class="input-moderno" required>
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+            </select>
+        </div>
+
+        <div class="grupo-input">
+            <label>Grupo Sanguíneo <span class="req">*</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.grupoSanguineo" class="input-moderno" placeholder="Ej. O+" required>
+        </div>
+
+        <div class="grupo-input">
+            <label>Alergias <span class="opcional">(Opcional)</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.alergias" class="input-moderno" placeholder="Ej. Penicilina (Dejar en blanco si no tiene)">
+        </div>
+
+        <div class="grupo-input">
+            <label>Antecedentes médicos <span class="opcional">(Opcional)</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.antecedentesMedicos" class="input-moderno" placeholder="Ej. Hipertensión (Dejar en blanco si no tiene)">
+        </div>
+
+        <div class="grupo-input">
+            <label>Contacto de Emergencia <span class="opcional">(Opcional)</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.nombreContactoEmergencia" class="input-moderno" placeholder="Nombre de un familiar">
+        </div>
+
+        <div class="grupo-input">
+            <label>Teléfono Emergencia <span class="opcional">(Opcional)</span></label>
+            <input type="tel" [(ngModel)]="nuevoPaciente.telefonoEmergencia" class="input-moderno" placeholder="999 888 777">
+        </div>
+
+    </div>
+
+    <div class="acciones-formulario">
+        <button type="button" class="btn-cancelar" (click)="CancelarRegistroPaciente()">
+            Cancelar
+        </button>
+        <button type="button" class="btn-guardar" (click)="registroPacienteenDB()">
+            💾 Registrar Paciente
+        </button>
+    </div>
+</div>

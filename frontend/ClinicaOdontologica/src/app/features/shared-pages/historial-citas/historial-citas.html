@@ -1,0 +1,53 @@
+<div class="tarjeta-premium animacion-fade" style="margin-top: 15px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f1f5f9;">
+        <h2 style="margin: 0; color: #0f766e; font-size: 20px;">📅 Historial de Citas</h2>
+        <span class="badge-paciente">Paciente: {{ pacienteSeleccionado?.persona?.nombres }} {{ pacienteSeleccionado?.persona?.apellidos }}</span>
+    </div>
+
+    <table class="tabla-pacientes" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+                <th style="padding: 12px 15px; color: #475569;">Fecha y Hora</th>
+                <th style="padding: 12px 15px; color: #475569;">Odontólogo</th>
+                <th style="padding: 12px 15px; color: #475569;">Motivo</th>
+                <th style="padding: 12px 15px; color: #475569;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="cargando">
+                <td colspan="4" style="text-align: center; padding: 40px; color: #64748b;">
+                    ⏳ Buscando registros en la base de datos...
+                </td>
+            </tr>
+
+            <ng-container *ngIf="!cargando">
+                <tr *ngFor="let cita of citasDelPaciente" style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 15px;"><strong>{{ cita.fechaHora | date:'dd MMM yyyy, h:mm a' }}</strong></td>
+                    
+                    <td style="padding: 15px;">Dr. {{ cita.odontologo.persona.nombres }} {{ cita.odontologo.persona.apellidos }}</td>
+                    
+                    <td style="padding: 15px; color: #64748b;">{{ cita.motivo }}</td>
+                    <td style="padding: 15px;">
+                        <select class="badge" [ngClass]="cita.estado" (change)="cambiarEstadoCita(cita, $event)"
+                            style="cursor: pointer; border: 1px solid transparent; outline: none; font-weight: bold; font-family: inherit;">
+                    
+                            <option value="Confirmado" [selected]="cita.estado === 'Confirmado'" style="color: black;">CONFIRMADO</option>
+                            <option value="Esperando" [selected]="cita.estado === 'Esperando'" style="color: black;">ESPERANDO</option>
+                            <option value="En Sala" [selected]="cita.estado === 'En Sala'" style="color: black;">EN SALA</option>
+                            <option value="Atendido" [selected]="cita.estado === 'Atendido'" style="color: black;">ATENDIDO</option>
+                            <option value="Cancelado" [selected]="cita.estado === 'Cancelado'" style="color: black;">CANCELADO</option>
+                    
+                        </select>
+                    </td>
+                </tr>
+            </ng-container>
+
+            <tr *ngIf="!cargando && citasDelPaciente.length === 0">
+                <td colspan="4" style="text-align: center; padding: 40px; color: #64748b;">
+                    No hay citas registradas en el historial de este paciente.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

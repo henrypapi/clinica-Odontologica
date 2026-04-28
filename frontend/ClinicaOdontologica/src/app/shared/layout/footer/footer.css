@@ -1,0 +1,64 @@
+footer {
+    background: linear-gradient(90deg,
+        rgba(42,123,155,1) 0%,
+        rgba(76,180,138,1) 50%,
+        rgba(237,221,83,1) 100%);
+    color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Links del footer */
+.footer-links a {
+    color: #ffffff;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #222;
+}
+
+/* Iconos sociales */
+.social-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.icon-link i {
+    font-size: 36px;
+    color: #fff;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.icon-link:hover i {
+    color: #222;
+    transform: scale(1.2);
+}
+
+/* Texto copyright */
+footer p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        max-width: 1000px;
+        margin: auto;
+    }
+}

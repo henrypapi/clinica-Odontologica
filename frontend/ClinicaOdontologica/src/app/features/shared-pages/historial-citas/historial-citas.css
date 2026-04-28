@@ -1,0 +1,33 @@
+/* Animación de entrada suave */
+.animacion-fade {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Etiqueta superior del nombre */
+.badge-paciente {
+    background-color: #f8fafc;
+    color: #334155;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+}
+
+/* Pastillas de estado */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.completada { background-color: #d1fae5; color: #065f46; }
+.cancelada { background-color: #fee2e2; color: #991b1b; }
+.pendiente { background-color: #fef3c7; color: #92400e; }

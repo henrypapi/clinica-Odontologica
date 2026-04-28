@@ -1,0 +1,204 @@
+<div class="dashboard-citas animacion-entrada">
+
+    <div class="menu-tabs">
+        <button [class.activo]="vistaActual === 'lista'" (click)="cambiarVista('lista')">
+            📋 Citas del Día
+        </button>
+        <button [class.activo]="vistaActual === 'nueva'" (click)="cambiarVista('nueva')">
+            ➕ Nueva Cita
+        </button>
+        <button [class.activo]="vistaActual === 'calendario'" (click)="cambiarVista('calendario')">
+            📅 Calendario Semanal
+        </button>
+    </div>
+
+    <div class="contenido-tab">
+
+        <div *ngIf="vistaActual === 'lista'" class="panel-lista tarjeta-premium animacion-fade">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; padding-bottom: 10px;">
+                <h2 style="margin: 0; border: none; padding: 0;">📋 Gestión de Citas</h2>
+                
+                <div style="display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 5px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <label style="font-weight: 600; color: #475569; font-size: 14px;">📅 Ver citas del día:</label>
+                    
+                    <input type="date" 
+                           [(ngModel)]="fechaFiltro" 
+                           (change)="filtrarCitasPorFecha()" 
+                           class="input-moderno" 
+                           style="padding: 6px 10px; border-color: #0f766e;">
+                </div>
+            </div>
+            
+            <div class="lista-vacia" *ngIf="listaCitasFiltradas.length === 0">
+                <p>No hay citas agendadas para la fecha seleccionada.</p>
+            </div>
+
+            <div class="tarjeta-cita" *ngFor="let cita of listaCitasFiltradas">
+                <div class="cita-info">
+                    <strong>{{cita.paciente.persona.nombres}} {{cita.paciente.persona.apellidos}}</strong>
+                    <span>📅 {{cita.fechaHora | date:'shortTime'}}</span> <span class="motivo">Dr. {{cita.odontologo.persona.nombres}} | Motivo: {{cita.motivo}}</span>
+                </div>
+                <div class="cita-estado">
+                    <span class="badge" [ngClass]="cita.estado">{{cita.estado | uppercase}}</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="vistaActual === 'nueva'" class="panel-formulario tarjeta-premium animacion-fade">
+            <h2>🗓️ Agendar Nueva Cita</h2>
+            
+<div class="grupo-input">
+                <label>Paciente:</label>
+                
+                <input type="text" 
+                       [(ngModel)]="terminoBusquedaPaciente" 
+                       (input)="filtrarPacientes()"
+                       placeholder="🔍 Buscar por nombre o apellido..." 
+                       class="input-moderno"
+                       style="margin-bottom: 10px;"> <select [(ngModel)]="nuevaCita.paciente.idPaciente" class="input-moderno">
+                    <option [ngValue]="null" disabled selected>Seleccione un paciente...</option>
+                    
+                    <option *ngFor="let pac of listaPacientesFiltrados" [ngValue]="pac.idPaciente || pac.id_paciente">
+                        {{pac.persona.nombres}} {{pac.persona.apellidos}}
+                    </option>
+                </select>
+
+                <small *ngIf="listaPacientesFiltrados.length === 0" style="color: #ef4444; display: block; margin-top: 5px;">
+                    No se encontraron pacientes con ese nombre.
+                </small>
+            </div>
+            <div class="grupo-input">
+                <label>Odontólogo Asignado:</label>
+                <select [(ngModel)]="nuevaCita.odontologo.idUsuario" class="input-moderno">
+                    <option [ngValue]="null" disabled selected>Seleccione el especialista...</option>
+                    <option *ngFor="let odo of listaOdontologos" [ngValue]="odo.idUsuario || odo.id_usuario">
+                        Dr/a. {{odo.persona.nombres}} {{odo.persona.apellidos}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="grupo-input">
+                <label>Servicio:</label>
+                <select [(ngModel)]="nuevaCita.catalogo_servicios.id_catalogo_servicios" class="input-moderno">
+                    <option [ngValue]="null" disabled selected>Seleccione un servicio...</option>
+                    <option *ngFor="let serv of listaServicios" [ngValue]="serv.id_catalogo_servicios || serv.idCatalogoServicios">
+                        {{serv.nombre}} - S/. {{serv.precio_base}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="grupo-input">
+                <label>Fecha y Hora:</label>
+                <input type="datetime-local" [(ngModel)]="nuevaCita.fechaHora" [min]="fechaMinima" class="input-moderno">
+            </div>
+
+            <div class="grupo-input">
+                <label>Motivo de la cita:</label>
+                <textarea [(ngModel)]="nuevaCita.motivo" rows="3" class="input-moderno"></textarea>
+            </div>
+
+
+            
+
+            <button (click)="intentarAgendar()" class="btn-agendar">Guardar Cita</button>
+
+            <div class="overlay-modal" *ngIf="mostrarModalConfirmacion">
+                <div class="caja-modal animacion-entrada">
+                    <div class="icono-alerta">❓</div>
+                    <h3>Confirmar Cita</h3>
+                    <p>¿Estás seguro de que deseas agendar esta cita con los datos ingresados?</p>
+                    
+                    <div class="botones-modal">
+                        <button class="btn-cancelar-modal" (click)="cancelarGuardado()">
+                            No, revisar datos
+                        </button>
+                        <button class="btn-confirmar-modal" (click)="confirmarGuardado()">
+                            Sí, agendar cita
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="vistaActual === 'calendario'" class="tarjeta-premium animacion-fade contenedor-calendario">
+            
+            <div class="calendario-toolbar">
+                <div class="navegacion-mes">
+                    <h2 style="margin: 0;">
+                        Semana del {{ diasSemana[0]?.fechaOriginal | date:'dd MMM' }} 
+                        al {{ diasSemana[6]?.fechaOriginal | date:'dd MMM' }}
+                    </h2>
+                </div>
+                
+                <div class="botones-navegacion">
+                    <button class="btn-nav" (click)="volverAHoyCalendario()">Hoy</button>
+                    <button class="btn-nav icon-nav" (click)="navegarSemanas(-1)">❮</button>
+                    <button class="btn-nav icon-nav" (click)="navegarSemanas(1)">❯</button>
+                </div>
+            </div>
+
+            <div class="calendario-grid">
+                
+                <div class="grid-cabecera">
+                    <div class="celda-vacia-esquina"></div> <div class="celda-dia-cabecera" *ngFor="let dia of diasSemana" [class.dia-actual]="dia.esHoy">
+                        <span class="nombre-dia">{{ dia.nombre }}</span>
+                        <span class="numero-dia">{{ dia.numero }}</span>
+                    </div>
+
+                    <div style="width: 13px; flex-shrink: 0; background: #f8fafc; border-left: 1px solid #e2e8f0;"></div>
+                </div>
+
+                <div class="grid-cuerpo">
+                    
+                    <div class="columna-horas">
+                        
+                        <div class="espaciador-top"></div> 
+
+                        <div class="celda-hora" *ngFor="let hora of horasDia">
+                            <span>{{ hora }}</span>
+                        </div>
+                    </div>
+
+                    <div class="columnas-dias">
+                        <div class="columna-dia" *ngFor="let dia of diasSemana">
+                            
+                            <div class="espaciador-top"></div> 
+
+                            <div class="linea-hora-fondo" *ngFor="let hora of horasDia"></div>
+
+                            <div class="bloque-cita" 
+                                 *ngFor="let cita of obtenerCitasParaElDia(dia.fechaOriginal)"
+                                 [style.top]="cita.estiloTop" 
+                                 [style.height]="cita.estiloHeight"
+                                 [style.background-color]="cita.estiloFondo">
+                                
+                                <div class="cita-contenido">
+                                    <strong class="cita-titulo">{{ cita.catalogo_servicios?.nombre || 'Consulta' }}</strong>
+                                    <span class="cita-hora">{{ cita.fechaHora | date:'shortTime' }}</span>
+                                    <span class="cita-paciente">{{ cita.paciente?.persona?.nombres }}</span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+
+    </div>
+
+
+</div>
+    <div class="toast-flotante" [ngClass]="{'mostrar': mostrarToast, 'toast-error': tipoToast === 'error'}">
+        <div class="toast-icono">
+            {{ tipoToast === 'error' ? '❌' : '✅' }}
+        </div>
+        <div class="toast-texto">
+            {{ mensajeToast }}
+        </div>
+    </div>

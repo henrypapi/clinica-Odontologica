@@ -1,0 +1,150 @@
+/* --- ANIMACIÓN SUAVE --- */
+.animacion-fade {
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-abrir-registro {
+    background-color: #0f766e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-bottom: 20px;
+}
+
+.btn-abrir-registro:hover {
+    background-color: #0d5e58;
+    transform: translateY(-2px);
+}
+
+.tarjeta-registro {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    margin-top: 15px;
+    max-width: 900px;
+}
+
+.cabecera-registro {
+    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+}
+
+.cabecera-registro h2 {
+    margin: 0 0 5px 0;
+    color: #0f766e; 
+    font-size: 24px;
+}
+
+.cabecera-registro p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.grid-formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .grid-formulario {
+        grid-template-columns: 1fr; 
+    }
+}
+
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.grupo-input label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.req {
+    color: #ef4444; 
+}
+
+.opcional {
+    font-weight: normal;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.input-moderno {
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no rompa el grid */
+}
+
+.input-moderno:focus {
+    outline: none;
+    border-color: #0f766e;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15); /* Aro brillante al hacer click */
+}
+
+/* --- BOTONES FINALES --- */
+.acciones-formulario {
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn-cancelar {
+    background-color: transparent;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+.btn-guardar {
+    background-color: #10b981; /* Verde esmeralda */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-guardar:hover {
+    background-color: #059669; /* Verde más oscuro */
+    transform: translateY(-2px);
+}

@@ -1,0 +1,372 @@
+<div class="dashboard-contenedor animacion-fade">
+    
+    <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2>👥 Gestión de Personal y Accesos</h2>
+            <p class="subtitulo">Administra los perfiles, estado de cuentas y horarios de atención</p>
+        </div>
+        <button (click)="abrirPanelRegistro()" class="btn-guardar" style="height: fit-content;">
+            ➕ Registrar Nuevo Personal
+        </button>
+    </div>
+
+    <div class="tabla-card" style="margin-top: 20px;">
+        <table class="tabla-moderna">
+            <thead>
+                <tr>
+                    <th>Nombre y Apellidos</th>
+                    <th>Usuario (Login)</th>
+                    <th style="text-align: center;">Rol</th>
+                    <th style="text-align: center;">Estado</th>
+                    <th style="text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="cargandoDatos">
+                    <td colspan="5" style="text-align: center; padding: 30px; color: #64748b;">⏳ Cargando personal...</td>
+                </tr>
+                <tr *ngFor="let user of listaUsuarios">
+                    <td style="font-weight: bold; color: #334155;">
+                        {{ user.persona?.nombres || user.nombres }} {{ user.persona?.apellidos || user.apellidos }}
+                    </td>
+                    <td style="color: #64748b;">@{{ user.username }}</td>
+                    <td style="text-align: center;">
+                        <span class="badge badge-rol">{{ user.rol | uppercase }}</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="badge" [ngClass]="user.activo === 'true' ? 'bg-verde' : 'bg-rojo'">
+                            {{ user.activo === 'true' ? 'ACTIVO' : 'INACTIVO' }}
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <button (click)="abrirPanelAdministracion(user)" class="btn-administrar">
+                            ⚙️ Administrar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="dashboard-header" style="margin-top: 40px; border-top: 2px solid #e2e8f0; padding-top: 20px;">
+        <div>
+            <h2>🩺 Catálogo Clínico de Servicios</h2>
+            <p class="subtitulo">Administra los precios, duraciones y descripciones de los tratamientos</p>
+            
+        </div>
+        <button (click)="abrirPanelNuevoServicio()" class="btn-guardar" style="height: fit-content; background-color: #0f766e;">
+            ➕ Añadir Servicio
+        </button>
+    </div>
+
+    <div class="tabla-card" style="margin-top: 20px;">
+        <table class="tabla-moderna">
+            <thead>
+                <tr>
+                    <th>Nombre del Servicio</th>
+                    <th>Descripción</th>
+                    <th style="text-align: center;">Duración</th>
+                    <th style="text-align: right;">Precio Base</th>
+                    <th style="text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="cargandoServicios">
+                    <td colspan="5" style="text-align: center; padding: 30px; color: #64748b;">⏳ Cargando catálogo...</td>
+                </tr>
+                <tr *ngFor="let srv of listaServicios">
+                    <td style="font-weight: bold; color: #0f766e;">{{ srv.nombre }}</td>
+                    <td style="color: #64748b; font-size: 13px;">{{ srv.descripcion }}</td>
+                    <td style="text-align: center;">🕒 {{ srv.duracion_minutos || srv.duracionMinutos }} min</td>
+                    <td style="text-align: right; font-weight: bold; color: #10b981;">
+                        S/ {{ (srv.precio_base || srv.precioBase) | number:'1.2-2' }}
+                    </td>
+                    <td style="text-align: center;">
+                        <button (click)="abrirPanelServicio(srv)" class="btn-accion" style="background: #f8fafc;">
+                            ✏️ Editar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+</div>
+
+<div *ngIf="mostrarModalAdministrar" class="modal-fondo">
+    <div class="modal-cuerpo animacion-fade" style="width: 700px; max-height: 90vh; overflow-y: auto;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #0f766e;">Perfil de {{ usuarioEditando?.rol | titlecase }}</h2>
+            <button (click)="cerrarPanelAdministracion()" style="background: none; border: none; font-size: 20px; cursor: pointer;">❌</button>
+        </div>
+
+        <div class="grid-2-columnas">
+            <div class="seccion-panel">
+                <h3>Contacto</h3>
+                <label>Teléfono:</label>
+                <input type="text" [(ngModel)]="datosPerfilBorrador.telefono" class="input-form">
+                
+                <label>Email:</label>
+                <input type="email" [(ngModel)]="datosPerfilBorrador.email" class="input-form">
+                
+                <label>Dirección:</label>
+                <textarea [(ngModel)]="datosPerfilBorrador.direccion" class="input-form" rows="2"></textarea>
+            </div>
+
+            <div class="seccion-panel">
+                <h3>Acceso al Sistema</h3>
+                <div class="toggle-container" style="margin-top: 15px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" [(ngModel)]="datosPerfilBorrador.activo" style="width: 20px; height: 20px;">
+                        <span [style.color]="datosPerfilBorrador.activo ? '#10b981' : '#ef4444'" style="font-weight: bold; font-size: 16px;">
+                            {{ datosPerfilBorrador.activo ? '🟢 Cuenta Activada (Puede entrar)' : '🔴 Cuenta Bloqueada (Sin acceso)' }}
+                        </span>
+                    </label>
+                </div>
+                
+                <button (click)="guardarCambiosPerfil()" class="btn-guardar" style="width: 100%; margin-top: 20px;">
+                    💾 Guardar Perfil y Acceso
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="usuarioEditando?.rol === 'admin' || usuarioEditando?.rol === 'empleado'" class="seccion-panel"
+            style="margin-top: 20px;">
+        
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0;">⏰ Matriz de Horarios de Atención</h3>
+                <button (click)="agregarDiaHorario()" class="btn-accion"
+                    style="background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe;">
+                    ➕ Añadir Jornada
+                </button>
+            </div>
+        
+            <div *ngIf="cargandoHorarios" style="text-align: center; padding: 20px;">
+                <div class="spinner-pequeno"></div>
+                <p style="color: #64748b; font-size: 13px;">Consultando agenda...</p>
+            </div>
+        
+            <table *ngIf="!cargandoHorarios" class="tabla-horarios">
+                <thead>
+                    <tr>
+                        <th>Día de la Semana</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th style="text-align: center;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let h of horariosBorrador; let i = index" [ngClass]="{'fila-sin-guardar': h.esNuevo}">
+                        <td style="padding: 8px;">
+                            <select [(ngModel)]="h.dia_semana" class="input-form-mini" style="margin: 0;">
+                                <option *ngFor="let d of diasSemanaCatalogo" [ngValue]="d.valor">
+                                    {{ d.nombre }}
+                                </option>
+                            </select>
+                            <div *ngIf="h.esNuevo" style="font-size: 10px; color: #d97706; font-weight: bold; margin-top: 4px; ">
+                                ⚠️ Sin guardar
+                            </div>
+                        </td>
+                        <td style="padding: 8px;">
+                            <input type="time" [(ngModel)]="h.hora_inicio" class="input-form-mini" style="margin: 0;">
+                        </td>
+                        <td style="padding: 8px;">
+                            <input type="time" [(ngModel)]="h.hora_fin" class="input-form-mini" style="margin: 0;">
+                        </td>
+                        <td style="padding: 8px; text-align: center;">
+                            <button (click)="quitarDiaHorario(i)" class="btn-eliminar-hora" title="Quitar este día">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="horariosBorrador.length === 0">
+                        <td colspan="4" style="text-align: center; color: #94a3b8; padding: 20px; font-style: italic;">
+                            No hay horarios asignados. Haz clic en "Añadir Jornada".
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <button *ngIf="!cargandoHorarios && horariosBorrador.length > 0" (click)="guardarCambiosHorarios()"
+                class="btn-guardar-horarios">
+                ✅ Guardar Configuración de Horarios
+            </button>
+        </div>
+</div></div>
+
+<div *ngIf="mostrarModalRegistro" class="modal-fondo">
+    <div class="modal-cuerpo animacion-fade" style="width: 800px; max-height: 90vh; overflow-y: auto;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #0f766e;">👤 Registrar Nuevo Personal</h2>
+            <button (click)="cerrarPanelRegistro()" style="background: none; border: none; font-size: 20px; cursor: pointer;">❌</button>
+        </div>
+
+        <div class="grid-2-columnas">
+            <div class="seccion-panel">
+                <h3 style="color: #334155;">Datos Personales</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Nombres *</label>
+                        <input type="text" [(ngModel)]="nuevoUsuarioBorrador.nombres" class="input-form">
+                    </div>
+                    <div>
+                        <label>Apellidos *</label>
+                        <input type="text" [(ngModel)]="nuevoUsuarioBorrador.apellidos" class="input-form">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 10px;">
+                    <div>
+                        <label>Tipo Doc.</label>
+                        <select [(ngModel)]="nuevoUsuarioBorrador.tipoDocumento" class="input-form">
+                            <option value="DNI">DNI</option>
+                            <option value="CE">Carnet Ext.</option>
+                            <option value="PASAPORTE">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Número de Documento</label>
+                        <input type="text" [(ngModel)]="nuevoUsuarioBorrador.numeroDocumento" class="input-form">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div>
+                        <label>Fecha de Nacimiento</label>
+                        <input type="date" [(ngModel)]="nuevoUsuarioBorrador.fechaNacimiento" class="input-form">
+                    </div>
+                    <div>
+                        <label>Sexo</label>
+                        <select [(ngModel)]="nuevoUsuarioBorrador.sexo" class="input-form">
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="seccion-panel">
+                <h3 style="color: #334155;">Contacto y Acceso</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Teléfono</label>
+                        <input type="text" [(ngModel)]="nuevoUsuarioBorrador.telefono" class="input-form">
+                    </div>
+                    <div>
+                        <label>Email</label>
+                        <input type="email" [(ngModel)]="nuevoUsuarioBorrador.email" class="input-form">
+                    </div>
+                </div>
+
+                <label style="margin-top: 10px;">Dirección</label>
+                <input type="text" [(ngModel)]="nuevoUsuarioBorrador.direccion" class="input-form">
+
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+                    <h4 style="margin: 0 0 10px 0; color: #dc2626;">🔐 Credenciales del Sistema</h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label>Usuario (Login) *</label>
+                            <input type="text" [(ngModel)]="nuevoUsuarioBorrador.username" class="input-form" placeholder="Ej: h.vizarreta">
+                        </div>
+                        <div>
+                            <label>Contraseña *</label>
+                            <input type="password" [(ngModel)]="nuevoUsuarioBorrador.password" class="input-form" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <label style="margin-top: 10px;">Rol del Sistema *</label>
+                    <select [(ngModel)]="nuevoUsuarioBorrador.rol" class="input-form" style="font-weight: bold;">
+                        <option value="admin">Administrador</option>
+                        <option value="empleado">Empleado</option>
+                        <option value="odontologo">Odontólogo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button (click)="guardarNuevoUsuario()" class="btn-guardar" style="width: 100%; font-size: 16px;">
+                💾 Crear Usuario y Asignar Accesos
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="mostrarModalNuevoServicio" class="modal-fondo">
+    <div class="modal-cuerpo animacion-fade" style="width: 500px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #0f766e;">🩺 Añadir Nuevo Servicio</h2>
+            <button (click)="cerrarPanelNuevoServicio()" style="background: none; border: none; font-size: 20px; cursor: pointer;">❌</button>
+        </div>
+
+        <div class="seccion-panel">
+            <div *ngIf="mensajeExitoServicio" class="alerta-exito animacion-fade">
+                {{ mensajeExitoServicio }}
+            </div>
+            <label>Nombre del Tratamiento/Servicio *</label>
+
+            <input type="text" [(ngModel)]="nuevoServicioBorrador.nombre" class="input-form" placeholder="Ej: Profilaxis Dental">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                <div>
+                    <label>Precio Base (S/) *</label>
+                    <input type="number" [(ngModel)]="nuevoServicioBorrador.precio_base" class="input-form" min="0">
+                </div>
+                <div>
+                    <label>Duración (Minutos) *</label>
+                    <input type="number" [(ngModel)]="nuevoServicioBorrador.duracion_minutos" class="input-form" min="1">
+                </div>
+            </div>
+
+            <label style="margin-top: 10px;">Descripción y Detalles</label>
+            <textarea [(ngModel)]="nuevoServicioBorrador.descripcion" class="input-form" rows="3" placeholder="Detalles de lo que incluye el tratamiento..."></textarea>
+            
+            <button (click)="guardarNuevoServicio()" class="btn-guardar" style="width: 100%; margin-top: 20px; background-color: #0f766e;">
+                💾 Guardar en Catálogo
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="mostrarModalServicio" class="modal-fondo">
+    <div class="modal-cuerpo animacion-fade" style="width: 500px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #0f766e;">Editar Servicio</h2>
+            <button (click)="cerrarPanelServicio()" style="background: none; border: none; font-size: 20px; cursor: pointer;">❌</button>
+        </div>
+
+        <div class="seccion-panel">
+            <label>Nombre del Servicio:</label>
+            <input type="text" [(ngModel)]="servicioBorrador.nombre" class="input-form">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                <div>
+                    <label>Precio Base (S/):</label>
+                    <input type="number" [(ngModel)]="servicioBorrador.precio_base" class="input-form">
+                </div>
+                <div>
+                    <label>Duración (Minutos):</label>
+                    <input type="number" [(ngModel)]="servicioBorrador.duracion_minutos" class="input-form">
+                </div>
+            </div>
+
+            <label>Descripción y Detalles:</label>
+            <textarea [(ngModel)]="servicioBorrador.descripcion" class="input-form" rows="3"></textarea>
+            
+            <button (click)="guardarCambiosServicio()" class="btn-guardar" style="width: 100%; margin-top: 20px;">
+                💾 Actualizar Catálogo
+            </button>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<nav class="navbar">
+    <div class="logo">
+        <a routerLink="/">
+            <img src="/assets/img/logo.png" alt="Logo Dental" width="60px" height="60px">
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        
+        @for (item of currentMenu(); track item.label) {
+            <li>
+                <a [routerLink]="item.path" routerLinkActive="active-link">
+                    {{ item.label }}
+                </a>
+            </li>
+        }
+
+        @if (!authService.currentUser()) {
+            <li><a routerLink="/login" class="btn-login">Iniciar Sesión</a></li>
+        } 
+        
+        @else {
+            <li style="color: #006064; font-weight: bold; align-self: center;">
+                Hola, {{ authService.currentUser().username }}
+            </li>
+            
+            <li>
+                <button (click)="cerrarSesion()" class="btn-logout">Salir</button>
+            </li>
+        }
+
+    </ul>
+</nav>
