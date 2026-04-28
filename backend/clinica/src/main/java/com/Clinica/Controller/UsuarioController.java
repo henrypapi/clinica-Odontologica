@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@CrossOrigin(origins = {"http://localhost:4200", "https://clinica-odontologica-hazel.vercel.app"})
 public class UsuarioController {
 
     @Autowired

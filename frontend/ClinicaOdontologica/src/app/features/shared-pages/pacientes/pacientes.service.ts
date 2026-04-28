@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,138 +9,62 @@ import { Observable } from 'rxjs';
 export class PacientesService {
   
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/pacientes';
+  private apiUrl = `${environment.apiUrl}/api/pacientes`;
+
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const userGuardado = localStorage.getItem('usuario_dental');
+    
+    if (userGuardado) {
+      const usuario = JSON.parse(userGuardado);
+      if (usuario.token) {
+        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
+      }
+    }
+    return headers;
+  }
 
   obtenerPacientes(): Observable<any[]> {
-    
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-
-    return this.http.get<any[]>(this.apiUrl, { headers });
+    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
-registrarPaciente(datosPaciente: any) {
-    const urlBackend = 'http://localhost:8080/api/pacientes'; 
-    
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-
-    return this.http.post(urlBackend, datosPaciente, { headers });
+  registrarPaciente(datosPaciente: any) {
+    return this.http.post(this.apiUrl, datosPaciente, { headers: this.getHeaders() });
   }
 
-    obtenerCitasPorPaciente(idPaciente: number) {
-    const url_citas_por_paciente =`http://localhost:8080/api/citas/paciente/${idPaciente}`
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if(userGuardado){
-      const usuario = JSON.parse(userGuardado);
-      if(usuario.token){
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.get<any[]>(url_citas_por_paciente, { headers });
+  obtenerCitasPorPaciente(idPaciente: number) {
+    const url_citas_por_paciente = `${environment.apiUrl}/api/citas/paciente/${idPaciente}`;
+    return this.http.get<any[]>(url_citas_por_paciente, { headers: this.getHeaders() });
   }
+
   obtenerTratamientosPorPaciente(idPaciente: number) {
-    const url_tratamientos = `http://localhost:8080/api/tratamientos/paciente/${idPaciente}`;
-    
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    
-    return this.http.get<any[]>(url_tratamientos, { headers });
+    const url_tratamientos = `${environment.apiUrl}/api/tratamientos/paciente/${idPaciente}`;
+    return this.http.get<any[]>(url_tratamientos, { headers: this.getHeaders() });
   }
 
   actualizarEstadoCita(idCita: number, nuevoEstado: string): Observable<any> {
-    const url = `http://localhost:8080/api/citas/${idCita}/estado`;
-    
-    const payload = { 
-      estado: nuevoEstado 
-    };
-       const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.put(url, payload, { headers });
+    const url = `${environment.apiUrl}/api/citas/${idCita}/estado`;
+    const payload = { estado: nuevoEstado };
+    return this.http.put(url, payload, { headers: this.getHeaders() });
   }
   
   registrarPago(datosPago: any): Observable<any> {
-    const userGuardado = localStorage.getItem('usuario_dental');
-    const url = `http://localhost:8080/api/pagos`;
-    
-    
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.post(url, datosPago, { headers });
+    const url = `${environment.apiUrl}/api/pagos`;
+    return this.http.post(url, datosPago, { headers: this.getHeaders() });
   }
 
   registrarTratamiento(datosTratamiento: any): Observable<any> {
-    const url = `http://localhost:8080/api/tratamientos`;
-    const userGuardado = localStorage.getItem('usuario_dental');
-
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.post(url, datosTratamiento, { headers });
+    const url = `${environment.apiUrl}/api/tratamientos`;
+    return this.http.post(url, datosTratamiento, { headers: this.getHeaders() });
   }
 
   obtenerCatalogoServicios(): Observable<any[]> {
-    const url = `http://localhost:8080/api/servicios`
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-
-    return this.http.get<any[]>(url, { headers }); 
+    const url = `${environment.apiUrl}/api/servicios`;
+    return this.http.get<any[]>(url, { headers: this.getHeaders() }); 
   }
 
   obtenerOdontologos(): Observable<any[]> {
-    const url = `http://localhost:8080/api/usuarios`
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.get<any[]>(url, { headers }); 
+    const url = `${environment.apiUrl}/api/usuarios`;
+    return this.http.get<any[]>(url, { headers: this.getHeaders() }); 
   }
 }

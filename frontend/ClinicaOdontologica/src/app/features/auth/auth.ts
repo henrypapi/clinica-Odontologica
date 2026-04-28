@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import { Router } from '@angular/router';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private apiUrl = 'http://localhost:8080/auth/login';
+  
+  private apiUrl = `${environment.apiUrl}/auth/login`;
 
   currentUser = signal<any>(null);
 
@@ -33,6 +35,7 @@ export class AuthService {
     localStorage.removeItem('usuario_dental');
     this.router.navigate(['/login']);
   }
+  
   estaLogueado() {
     return this.currentUser() !== null;
   }

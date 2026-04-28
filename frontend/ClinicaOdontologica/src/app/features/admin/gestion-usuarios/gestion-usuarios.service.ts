@@ -1,117 +1,65 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment'; // 🌟 Importamos la configuración global
 
 @Injectable({
   providedIn: 'root'
 })
 export class GestionUsuariosService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/usuarios';
+  
+  private apiUrl = `${environment.apiUrl}/api/usuarios`;
+  private apiServiciosUrl = `${environment.apiUrl}/api/servicios`;
 
   constructor() { }
 
-  obtenerTodosLosUsuarios(): Observable<any[]> {
-    const userGuardado = localStorage.getItem('usuario_dental');
+  private getHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
+    const userGuardado = localStorage.getItem('usuario_dental');
+    
     if (userGuardado) {
       const usuario = JSON.parse(userGuardado);
       if (usuario.token) {
         headers = headers.set('Authorization', `Bearer ${usuario.token}`);
       }
     }
-    return this.http.get<any[]>(this.apiUrl, { headers });
+    return headers;
+  }
+
+  obtenerTodosLosUsuarios(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 
   actualizarPerfilUsuario(idUsuario: number, datosActualizados: any): Observable<any> {
     const url = `${this.apiUrl}/${idUsuario}`;
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.put(url, datosActualizados, { headers });
+    return this.http.put(url, datosActualizados, { headers: this.getHeaders() });
   }
 
   obtenerHorariosOdontologo(idUsuario: number): Observable<any[]> {
     const url = `${this.apiUrl}/${idUsuario}/horarios`;
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.get<any[]>(url, { headers });
+    return this.http.get<any[]>(url, { headers: this.getHeaders() });
   }
 
   actualizarHorariosOdontologo(idUsuario: number, nuevosHorarios: any[]): Observable<any> {
     const url = `${this.apiUrl}/${idUsuario}/horarios`;
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.put(url, nuevosHorarios, { headers });
+    return this.http.put(url, nuevosHorarios, { headers: this.getHeaders() });
   }
 
-
-  private apiServiciosUrl = 'http://localhost:8080/api/servicios';
-
   obtenerCatalogoServicios(): Observable<any[]> {
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.get<any[]>(this.apiServiciosUrl, { headers });
+    return this.http.get<any[]>(this.apiServiciosUrl, { headers: this.getHeaders() });
   }
 
   actualizarServicio(idServicio: number, datosActualizados: any): Observable<any> {
     const url = `${this.apiServiciosUrl}/${idServicio}`;
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.put(url, datosActualizados, { headers });
+    return this.http.put(url, datosActualizados, { headers: this.getHeaders() });
   }
 
   registrarNuevoUsuario(nuevoUsuarioPaquete: any): Observable<any> {
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.post(this.apiUrl, nuevoUsuarioPaquete, { headers });
+    return this.http.post(this.apiUrl, nuevoUsuarioPaquete, { headers: this.getHeaders() });
   }
+  
   crearNuevoServicio(nuevoServicioPaquete: any): Observable<any> {
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return this.http.post(this.apiServiciosUrl, nuevoServicioPaquete, { headers });
+    return this.http.post(this.apiServiciosUrl, nuevoServicioPaquete, { headers: this.getHeaders() });
   }
-
 }

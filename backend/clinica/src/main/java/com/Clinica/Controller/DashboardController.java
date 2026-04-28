@@ -23,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dashboard")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://clinica-odontologica-hazel.vercel.app"})
 public class DashboardController {
 
     @Autowired

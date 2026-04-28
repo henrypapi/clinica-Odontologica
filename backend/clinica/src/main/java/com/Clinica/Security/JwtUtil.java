@@ -17,9 +17,6 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Esta es la "firma secreta" de tu clínica. 
-    // Si un hacker intenta crear un token falso, no podrá hacerlo sin esta clave.
-    // OJO: Esta clave es un texto en Base64. (Para producción se pone en el application.properties)
     private static final String SECRET_KEY = "Q2xpbmljYU9kb250b2xvZ2ljYVNlY3JldEtleVBhcmFUb2tlbnNNdXlTZWd1cm9zMjAyNg==";
 
     // --- 1. MÉTODO PARA CREAR EL TOKEN ---
