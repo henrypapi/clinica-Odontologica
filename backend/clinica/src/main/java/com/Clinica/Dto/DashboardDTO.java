@@ -1,6 +1,7 @@
 package com.Clinica.Dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class DashboardDTO {
     private Double ingresosMes;

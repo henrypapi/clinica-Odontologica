@@ -18,7 +18,6 @@ public class RegistroUsuarioDTO {
     private String password;
     private String rol;
 
-    // Genera todos los Getters y Setters a continuación:
     public String getNombres() { return nombres; }
     public void setNombres(String nombres) { this.nombres = nombres; }
 

@@ -21,8 +21,8 @@ export class TratamientosPaciente implements OnInit {
     id_servicio: '',
     id_odontologo: '',
     observaciones: '',
-    tipo_aplicacion: 'general', // Por defecto será general (Boca completa)
-    diente: ''                  // Aquí guardaremos el número (ej. 14, 21)
+    tipo_aplicacion: 'general',
+    diente: ''                
   };
 
   listaServiciosCatalogo: any[] = []; 
@@ -67,29 +67,24 @@ export class TratamientosPaciente implements OnInit {
     });
   }
 
-  // 🧮 Motor Matemático
   calcularDeuda(costoTotal: number, abonado: number): number {
     const costo = costoTotal || 0; 
     const pago = abonado || 0;
     return costo - pago;
   }
 
-  // 🎨 Motor Visual
   obtenerEstadoPago(costoTotal: number, abonado: number): string {
     const costo = costoTotal || 0;
     const pago = abonado || 0;
     
     if (pago >= costo && costo > 0) return 'pagado';
-    if (pago > 0 && pago < costo) return 'pendiente'; 
+    if (pago > 0 && pago < costo) return 'pendiente';
+    if(costo==0) return 'sin costo';
     return 'deuda'; 
   }
 
-  // ==========================================
-  // 🌟 LÓGICA DEL NUEVO TRATAMIENTO
-  // ==========================================
   
 abrirModalTratamiento() {
-    // Limpiamos el formulario y reseteamos a los valores por defecto
     this.nuevoTratamiento = { 
       id_servicio: '', 
       id_odontologo: '', 
@@ -105,7 +100,6 @@ abrirModalTratamiento() {
   }
 
 guardarNuevoTratamiento() {
-    // 🌟 Aseguramos que los valores sean números reales o nulos, jamás la palabra "undefined"
     const paqueteTratamiento = {
       ...this.nuevoTratamiento,
       id_servicio: parseInt(this.nuevoTratamiento.id_servicio) || null,
