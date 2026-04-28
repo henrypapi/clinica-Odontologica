@@ -1,0 +1,131 @@
+<div class="dashboard-contenedor">
+
+    <div class="cabecera-dashboard">
+        <button *ngIf="vistaActual !== 'lista'" (click)="cambiarVista('lista')" class="btn-volver">
+            ⬅ Volver al Directorio
+        </button>
+        <h1 *ngIf="vistaActual === 'lista'">👥 Directorio de Pacientes</h1>
+        <h1 *ngIf="vistaActual === 'perfil'">📁 Expediente Clínico</h1>
+        <h1 *ngIf="vistaActual === 'odontograma'">🦷 Odontograma</h1>
+        <h1 *ngIf="vistaActual === 'registro'">📝 Registrar Nuevo Paciente</h1>
+        <h1 *ngIf="vistaActual === 'historial-citas'">📅 Historial del Paciente</h1>
+        <h1 *ngIf="vistaActual === 'tratamientos'">💳 Estado de Cuenta</h1>
+    </div>
+
+    <div *ngIf="vistaActual === 'lista'" class="tarjeta-premium">
+        
+        <div class="barra-herramientas">
+            <input type="text" [(ngModel)]="textoBusqueda" (input)="buscarPaciente()" 
+                   placeholder="🔍 Buscar por nombre, apellido o DNI..." class="input-buscar">
+            
+            <button class="btn-nuevo" (click)="cambiarVista('registro')">+ Añadir Paciente</button>
+            
+        </div>
+
+        <table class="tabla-pacientes">
+            <thead>
+                <tr>
+                    <th>Documento</th>
+                    <th>Nombres y Apellidos</th>
+                    <th>Teléfono</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="cargando">
+                    <td colspan="4" class="estado-carga">
+
+                        <svg class="spinner-segmentado" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <g transform="translate(12,12)">
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="1" transform="rotate(0)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.9" transform="rotate(30)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.8" transform="rotate(60)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.7" transform="rotate(90)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.6" transform="rotate(120)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.5" transform="rotate(150)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.4" transform="rotate(180)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.3" transform="rotate(210)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.2" transform="rotate(240)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.1" transform="rotate(270)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.05" transform="rotate(300)" />
+                                <line x1="0" y1="-10" x2="0" y2="-6" stroke-opacity="0.02" transform="rotate(330)" />
+                            </g>
+                        </svg>
+
+                        <p style="margin-top: 15px; color: #38bdf8;">Buscando pacientes...</p>
+                    </td>
+                </tr>
+
+                <ng-container *ngIf="!cargando">
+                    <tr *ngFor="let pac of pacientesFiltrados; let i = index" class="paciente-item"
+                        [style.animation-delay]="(i * 0.05) + 's'">
+                    
+                        <td>{{pac.persona.numeroDocumento || 'S/N'}}</td>
+                        <td><strong>{{pac.persona.nombres}} {{pac.persona.apellidos}}</strong></td>
+                        <td>{{pac.persona.telefono || '-'}}</td>
+                        <td>
+                            <button (click)="cambiarVista('perfil', pac)" class="btn-abrir">
+                                Abrir Expediente
+                            </button>
+                        </td>
+                    </tr>
+                </ng-container>
+
+                <tr *ngIf="!cargando && pacientesFiltrados.length === 0">
+                    <td colspan="4" class="texto-vacio">
+                        <span style="font-size: 24px; display: block; margin-bottom: 10px;">🔍</span>
+                        No se encontraron pacientes con esa búsqueda.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="vistaActual === 'perfil' && pacienteSeleccionado" class="tarjeta-premium perfil-contenedor">
+        
+        <div class="perfil-header">
+            <div class="avatar">
+                {{pacienteSeleccionado.persona.nombres.charAt(0)}}{{pacienteSeleccionado.persona.apellidos.charAt(0)}}
+            </div>
+            <div class="datos-principales">
+                <h2>{{pacienteSeleccionado.persona.nombres}} {{pacienteSeleccionado.persona.apellidos}}</h2>
+                <p><strong>DNI:</strong> {{pacienteSeleccionado.persona.numeroDocumento}} | <strong>Nacimiento:</strong> {{pacienteSeleccionado.persona.fecha_nacimiento}}</p>
+                <p class="alergias">⚠️ Alergias: {{pacienteSeleccionado.alergias || 'Ninguna registrada' }}</p>
+                <p>📋 Antecedentes: {{pacienteSeleccionado.antecedentes_medicos || 'Ninguno' }}</p>
+            </div>
+        </div>
+
+        <hr class="divisor">
+
+        <div class="acciones-medicas">
+            <h3>Acciones Clínicas</h3>
+            <div class="grid-botones">
+                <button (click)="cambiarVista('odontograma', pacienteSeleccionado)" class="btn-accion btn-odontograma">
+                    🦷 Evaluar Odontograma
+                </button>
+                <button (click)="cambiarVista('tratamientos', pacienteSeleccionado)" class="btn-accion btn-tratamientos">
+                    💳 Tratamientos y Pagos
+                </button>
+                <button (click)="cambiarVista('historial-citas', pacienteSeleccionado)" class="btn-accion btn-citas">
+                    📅 Historial de Citas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="vistaActual === 'odontograma'">
+        <app-odontograma-ver [pacienteSeleccionado]="pacienteSeleccionado"></app-odontograma-ver>
+    </div>
+
+    <div *ngIf="vistaActual === 'registro'">
+        <app-registro-paciente ></app-registro-paciente>
+    </div>
+    <div *ngIf="vistaActual === 'historial-citas'">
+        <app-historial-citas [pacienteSeleccionado]="pacienteSeleccionado"></app-historial-citas>
+    </div>
+
+    <div *ngIf="vistaActual === 'tratamientos'">
+        <app-tratamientos-paciente [pacienteSeleccionado]="pacienteSeleccionado"></app-tratamientos-paciente>
+    </div>
+
+</div>

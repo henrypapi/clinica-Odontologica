@@ -1,0 +1,144 @@
+<div class="contenedor-principal">
+
+  <div class="panel-paciente">
+      <h3>Historial de Odontogramas</h3>
+      
+      @if (historialOdontogramas.length === 0) {
+         <p style="color: #666; font-size: 14px;">No hay odontogramas registrados para este paciente.</p>
+      } @else {
+         <div class="lista-historial">
+           @for (odonto of historialOdontogramas; track odonto.idOdontograma) {
+              <button class="btn-historial" (click)="verOdontogramaAntiguo(odonto)">
+                <strong>Odontograma #{{ odonto.idOdontograma }} - {{ odonto.tipo }}</strong><br>
+                <span style="font-size: 12px; font-weight: normal; color: #555;">
+                  📅 {{ odonto.fechaEvaluacion | date:'dd/MM/yyyy - h:mm a' }}
+                </span>
+                <span style="font-size: 10px; font-weight: normal; color: #7a7a7a; display: block; margin-top: 5px;">
+                  Observaciones: {{ odonto.observaciones }} 
+                </span>
+              </button>
+           }
+         </div>
+      }
+
+      <div style="margin-top: 30px;">
+        <button class="btn-modo" (click)="modoEdicion = !modoEdicion">
+          Modo actual: {{ modoEdicion ? 'REGISTRAR (Editar)' : 'VER (Historial)' }}
+        </button>
+  
+        @if (modoEdicion) {
+          <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 5px;">
+            <strong style="display: block; margin-bottom: 5px;">Tipo de Registro:</strong>
+            
+            <label style="margin-right: 15px; cursor: pointer;">
+              <input type="radio" name="tipoOdonto" value="INICIAL" [(ngModel)]="tipoOdontograma"> 
+              Odontograma Inicial
+            </label>
+            
+            <label style="cursor: pointer;">
+              <input type="radio" name="tipoOdonto" value="EVOLUCION" [(ngModel)]="tipoOdontograma"> 
+              Evolución
+            </label>
+
+            <div style="margin-top: 15px; padding: 10px; background: #f9f9f9; border-radius: 5px; border: 1px solid #ccc;">
+              <strong style="display: block; margin-bottom: 5px;">Observaciones Generales:</strong>
+              <textarea rows="4" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; resize: vertical;" 
+                placeholder="Síntomas, notas..."
+                [(ngModel)]="observacionGeneral"></textarea>
+            </div>
+
+            <button class="btn-guardar" (click)="guardarEnBaseDeDatos()" style="margin-top: 10px; width: 100%; padding: 10px; background-color: #2e7d32; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+              💾 Guardar Nuevo
+            </button>
+          </div>
+        }
+      </div>
+  </div>
+
+  <div class="panel-odontograma">
+    <h2 style="text-align: center;">Odontograma Visual</h2>
+
+    <div class="fila-dientes fila-adulto-top">
+      <div class="cuadrante">
+          @for (num of dientes18al11; track num) {
+          <app-diente [numero]="num" posicionNumero="arriba" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+          }
+      </div>
+      <div class="separador"></div>
+      <div class="cuadrante">
+          @for (num of dientes21al28; track num) {
+          <app-diente [numero]="num" posicionNumero="arriba" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+          }
+      </div>
+    </div>
+
+    <div class="bloque-nino">
+       <div class="fila-dientes fila-nino">
+        <div class="cuadrante">
+            @for (num of dientes55al51; track num) {
+            <app-diente [numero]="num" posicionNumero="arriba" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+            }
+        </div>
+          <div class="separador"></div>
+        <div class="cuadrante">
+            @for (num of dientes61al65; track num) {
+            <app-diente [numero]="num" posicionNumero="arriba" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+            }
+        </div>
+       </div>
+       <div class="fila-dientes fila-nino">
+        <div class="cuadrante">
+            @for (num of dientes85al81; track num) {
+            <app-diente [numero]="num" posicionNumero="abajo" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+            }
+        </div>
+          <div class="separador"></div>
+        <div class="cuadrante">
+            @for (num of dientes71al75; track num) {
+            <app-diente [numero]="num" posicionNumero="abajo" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+            }
+        </div>
+       </div>
+    </div>
+
+    <div class="fila-dientes fila-adulto-bottom">
+        <div class="cuadrante">
+            @for (num of dientes48al41; track num) {
+            <app-diente [numero]="num" posicionNumero="abajo" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+            }
+        </div>
+        <div class="separador"></div>
+        <div class="cuadrante">
+            @for (num of dientes31al38; track num) {
+            <app-diente [numero]="num" posicionNumero="abajo" [estado]="mapaDientes[num] || {}" (tocoCara)="procesarClicDiente(num, $event)"></app-diente>
+            }
+        </div>
+    </div>
+  </div> 
+
+</div>
+
+@if (modalAbierto && seleccionActual) {
+  <div class="modal-fondo">
+    <div class="modal-caja">
+      <h3>Diagnóstico: Diente {{ seleccionActual?.diente }}</h3>
+      <p>Selecciona el estado para la cara: <strong>{{ seleccionActual?.cara }}</strong></p>
+
+      <div style="margin-top: 15px; margin-bottom: 15px; text-align: left;">
+          <strong style="display: block; font-size: 14px; margin-bottom: 5px;">
+            Detalle clínico para el diente {{ seleccionActual.diente }} ({{ seleccionActual.cara }}):
+          </strong>
+          <textarea rows="2" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;" 
+            placeholder="Ej: Caries profunda..." [(ngModel)]="notaModalActual"></textarea>
+        </div>
+      
+      <div class="botones-opciones">
+        <button class="btn-opcion rojo" (click)="aplicarTratamiento('red')">Caries (Rojo)</button>
+        <button class="btn-opcion azul" (click)="aplicarTratamiento('blue')">Curado (Azul)</button>
+        <button class="btn-opcion blanco" (click)="aplicarTratamiento('white')">Sano / Limpiar</button>
+      </div>
+
+      <button class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+}

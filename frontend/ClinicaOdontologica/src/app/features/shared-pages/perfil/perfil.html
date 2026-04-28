@@ -1,0 +1,106 @@
+<div class="contenedor-perfil animacion-fade">
+    
+    <div *ngIf="cargandoPerfil" class="cargando-box">
+        ⏳ Obteniendo datos confidenciales del servidor...
+    </div>
+
+    <div *ngIf="!cargandoPerfil && miPerfil" class="grid-perfil">
+
+        <div class="tarjeta identidad-box">
+            <div class="cabecera-tarjeta">
+                <h3>👤 Datos Personales</h3>
+                <span class="badge-rol">{{ miPerfil?.rol | uppercase }}</span>
+            </div>
+            
+            <div *ngIf="!modoEdicion" class="info-grid">
+                <div class="info-item">
+                    <label>Nombres y Apellidos</label>
+                    <p>{{ miPerfil?.persona?.nombres }} {{ miPerfil?.persona?.apellidos }}</p>
+                </div>
+                
+                <div class="info-item">
+                    <label>Documento ({{ miPerfil?.persona?.tipoDocumento }})</label>
+                    <p>{{ miPerfil?.persona?.numeroDocumento }}</p>
+                </div>
+
+                <div class="info-item highlight">
+                    <label>Edad Actual</label>
+                    <p><strong>{{ edadCalculada }} años</strong></p> 
+                </div>
+
+                <div class="info-item">
+                    <label>Contacto</label>
+                    <p>📧 {{ miPerfil?.persona?.email || 'No registrado' }}</p>
+                    <p>📱 {{ miPerfil?.persona?.telefono || 'No registrado' }}</p>
+                </div>
+
+                <button (click)="activarEdicion()" class="btn-editar-perfil">
+                    ✏️ Editar mis datos
+                </button>
+            </div>
+
+            <div *ngIf="modoEdicion" class="formulario-seguridad animacion-fade">
+                <div class="form-group">
+                    <label>Nombres</label>
+                    <input type="text" [(ngModel)]="datosEdicion.nombres" class="input-moderno">
+                </div>
+                
+                <div class="form-group">
+                    <label>Apellidos</label>
+                    <input type="text" [(ngModel)]="datosEdicion.apellidos" class="input-moderno">
+                </div>
+
+                <div class="form-group">
+                    <label>Correo Electrónico (Email)</label>
+                    <input type="email" [(ngModel)]="datosEdicion.email" class="input-moderno">
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono / Celular</label>
+                    <input type="text" [(ngModel)]="datosEdicion.telefono" class="input-moderno">
+                </div>
+
+                <div class="botones-edicion">
+                    <button (click)="guardarCambiosPerfil()" [disabled]="cargandoEdicion" class="btn-guardar btn-exito">
+                        {{ cargandoEdicion ? 'Guardando...' : '💾 Guardar' }}
+                    </button>
+                    <button (click)="cancelarEdicion()" [disabled]="cargandoEdicion" class="btn-guardar btn-peligro">
+                        ❌ Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tarjeta seguridad-box">
+            <div class="cabecera-tarjeta">
+                <h3>🔒 Seguridad de la Cuenta</h3>
+                <p class="subtitulo">Usa una contraseña de al menos 6 caracteres.</p>
+            </div>
+
+            <div class="formulario-seguridad">
+                <div *ngIf="mensajeExito" class="alerta exito">✅ {{ mensajeExito }}</div>
+                <div *ngIf="mensajeError" class="alerta error">❌ {{ mensajeError }}</div>
+
+                <div class="form-group">
+                    <label>Contraseña Actual</label>
+                    <input type="password" [(ngModel)]="passAnterior" placeholder="Ingresa tu contraseña actual" class="input-moderno">
+                </div>
+
+                <div class="form-group">
+                    <label>Nueva Contraseña</label>
+                    <input type="password" [(ngModel)]="passNueva" placeholder="Escribe la nueva contraseña" class="input-moderno">
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar Nueva Contraseña</label>
+                    <input type="password" [(ngModel)]="confirmarPassNueva" placeholder="Repite la nueva contraseña" class="input-moderno">
+                </div>
+
+                <button (click)="cambiarMiPassword()" [disabled]="cargandoPassword" class="btn-guardar">
+                    {{ cargandoPassword ? 'Validando...' : 'Actualizar Contraseña' }}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

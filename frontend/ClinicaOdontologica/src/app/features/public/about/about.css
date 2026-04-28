@@ -1,0 +1,151 @@
+/* ANIMACIÓN GENERAL DE APARICIÓN */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1s ease-out forwards;
+}
+
+.fade-up:nth-child(1) { animation-delay: 0.2s; }
+.fade-up:nth-child(2) { animation-delay: 0.4s; }
+.fade-up:nth-child(3) { animation-delay: 0.6s; }
+.fade-up:nth-child(4) { animation-delay: 0.8s; }
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* CONTENEDOR PRINCIPAL */
+.nosotros {
+    width: 90%;
+    max-width: 1200px;
+    margin: 60px auto;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+/* ENCABEZADO */
+.nosotros-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.nosotros-header h1 {
+    font-size: 42px;
+    color: #0f766e;
+    font-weight: 700;
+}
+
+.nosotros-header p {
+    font-size: 18px;
+    margin-top: 15px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* HISTORIA + IMAGEN */
+.nosotros-contenido {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 70px;
+}
+
+.nosotros-texto {
+    flex: 1;
+    min-width: 300px;
+}
+
+.nosotros-texto h2 {
+    font-size: 26px;
+    color: #0f766e;
+    margin-bottom: 12px;
+}
+
+.nosotros-texto p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+    color: #444;
+}
+
+/* IMAGEN EQUIPO */
+.nosotros-imagen {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.nosotros-imagen img {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    transition: transform 0.4s ease;
+}
+
+.nosotros-imagen img:hover {
+    transform: scale(1.03);
+}
+
+/* VALORES */
+.valores {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.valores h2 {
+    font-size: 32px;
+    color: #0f766e;
+    margin-bottom: 40px;
+}
+
+.valores-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.valor {
+    background: linear-gradient(145deg, #e0fdf9, #c1fce8);
+    padding: 30px 25px;
+    border-radius: 25px;
+    width: 260px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.valor h3 {
+    font-size: 20px;
+    color: #0f766e;
+    margin-bottom: 12px;
+}
+
+.valor p {
+    font-size: 15px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.valor:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .nosotros-contenido {
+        flex-direction: column;
+    }
+
+    .valores-grid {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

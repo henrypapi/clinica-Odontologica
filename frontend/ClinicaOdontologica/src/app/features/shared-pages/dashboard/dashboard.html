@@ -1,0 +1,137 @@
+<div *ngIf="cargandoDatos" class="pantalla-carga-completa">
+    <div class="loader-contenido">
+        <svg class="spinner-segmentado animacion-giro" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+            <g transform="translate(12,12)">
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="1" transform="rotate(0)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.9" transform="rotate(30)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.8" transform="rotate(60)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.7" transform="rotate(90)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.6" transform="rotate(120)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.5" transform="rotate(150)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.4" transform="rotate(180)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.3" transform="rotate(210)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.2" transform="rotate(240)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.1" transform="rotate(270)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.05" transform="rotate(300)" />
+                <line x1="0" y1="-10" x2="0" y2="-6" stroke="#0f766e" stroke-width="2" stroke-opacity="0.02" transform="rotate(330)" />
+            </g>
+        </svg>
+        <h2 style="color: #0f766e; margin-top: 20px;">Cargando dashboard</h2>
+        <p style="color: #64748b;">Sincronizando con la clínica</p>
+    </div>
+</div>
+
+<ng-container *ngIf="!cargandoDatos">
+    <div id="dashboard-clinica" class="dashboard-contenedor animacion-fade">
+
+        <div class="dashboard-header">
+            <div>
+                <h2>📊 Panel de Control Gerencial</h2>
+                <p class="subtitulo">Resumen financiero y operativo del día</p>
+            </div>
+            <button (click)="exportarDashboardPDF()" [disabled]="generandoPDF" class="btn-pdf">
+                {{ generandoPDF ? '⏳ Generando documento...' : '📄 Descargar Reporte PDF' }}
+            </button>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card highlight-green">
+                <div class="kpi-icono">💰</div>
+                <div class="kpi-info">
+                    <p>Ingresos del Mes</p>
+                    <h3>S/ {{ kpiIngresosMes | number:'1.2-2' }}</h3>
+                </div>
+            </div>
+
+            <div class="kpi-card highlight-blue">
+                <div class="kpi-icono">📅</div>
+                <div class="kpi-info">
+                    <p>Citas de Hoy</p>
+                    <h3>{{ kpiCitasHoy }}</h3>
+                </div>
+            </div>
+
+            <div class="kpi-card highlight-purple">
+                <div class="kpi-icono">👤</div>
+                <div class="kpi-info">
+                    <p>Total de Pacientes</p>
+                    <h3>{{ kpiNuevosPacientes }}</h3>
+                </div>
+            </div>
+
+            <div class="kpi-card highlight-orange">
+                <div class="kpi-icono">👨‍⚕️</div>
+                <div class="kpi-info">
+                    <p>Personal Activo</p>
+                    <h3>{{ kpiOdontologosActivos }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Demanda de Servicios</h3>
+                <div class="canvas-container">
+                    <canvas baseChart 
+                        [data]="serviciosChartData" 
+                        [options]="serviciosChartOptions" 
+                        type="doughnut">
+                    </canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Evolución de Ingresos Mensuales</h3>
+                <div class="canvas-container">
+                    <canvas baseChart 
+                        [data]="ingresosChartData" 
+                        [options]="ingresosChartOptions" 
+                        type="line">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabla-card">
+            <h3>📋 Agenda Próxima</h3>
+            
+            <table class="tabla-moderna" *ngIf="agendaHoy.length > 0; else sinCitas">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Odontólogo</th>
+                        <th>Servicio</th>
+                        <th style="text-align: center;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cita of agendaHoy">
+                        <td style="font-weight: bold; color: #475569;">{{ cita.hora }}</td>
+                        <td>{{ cita.paciente }}</td>
+                        <td style="color: #64748b;">{{ cita.doctor }}</td>
+                        <td>{{ cita.servicio }}</td>
+                        <td style="text-align: center;">
+                            <span class="badge" [ngClass]="{
+                                'bg-verde': cita.estado === 'Atendido', 
+                                'bg-azul': cita.estado === 'En Sala', 
+                                'bg-naranja': cita.estado === 'Esperando', 
+                                'bg-gris': cita.estado === 'Confirmado'
+                            }">
+                                {{ cita.estado }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ng-template #sinCitas>
+                <div style="text-align: center; padding: 2rem; color: #64748b;">
+                    <p style="font-size: 2rem; margin-bottom: 0.5rem;">☕</p>
+                    <p>No hay citas programadas para el día de hoy.</p>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,53 @@
+.contenedor-perfil {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.animacion-fade { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+.cargando-box { text-align: center; padding: 50px; color: #64748b; font-size: 18px; }
+
+.grid-perfil { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+@media (max-width: 768px) { .grid-perfil { grid-template-columns: 1fr; } }
+
+.tarjeta { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+
+.cabecera-tarjeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+.cabecera-tarjeta h3 { margin: 0; color: #0f766e; font-size: 18px; }
+.subtitulo { font-size: 12px; color: #64748b; margin: 0; }
+
+.badge-rol { background: #0f766e; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
+
+.info-grid { display: flex; flex-direction: column; gap: 15px; }
+.info-item label { font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; }
+.info-item p { margin: 5px 0 0 0; font-size: 15px; color: #334155; }
+.highlight { background: #f8fafc; padding: 12px; border-radius: 8px; border-left: 4px solid #0f766e; }
+
+/* Formularios */
+.formulario-seguridad { display: flex; flex-direction: column; gap: 15px; }
+.form-group label { font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 5px; display: block; }
+
+.input-moderno { width: 100%; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: 0.3s; background: #f8fafc; }
+.input-moderno:focus { outline: none; border-color: #0f766e; background: white; box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1); }
+
+/* Botones */
+.btn-guardar { color: white; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; background: #0f766e; width: 100%; margin-top: 10px; }
+.btn-guardar:hover { background: #0d5f58; }
+.btn-guardar:disabled { background: #94a3b8; cursor: not-allowed; }
+
+.btn-editar-perfil { background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.3s; width: 100%; }
+.btn-editar-perfil:hover { background: #2563eb; }
+
+.botones-edicion { display: flex; gap: 10px; margin-top: 15px; }
+.btn-exito { background: #10b981; margin-top: 0; }
+.btn-exito:hover { background: #059669; }
+.btn-peligro { background: #ef4444; margin-top: 0; }
+.btn-peligro:hover { background: #dc2626; }
+
+/* Alertas */
+.alerta { padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+.exito { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+.error { background: #fee2e2; color: #b91c1c; border: 1px solid #ef4444; }

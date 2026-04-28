@@ -1,0 +1,180 @@
+<div class="tarjeta-premium animacion-fade" style="margin-top: 15px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f1f5f9;">
+        <h2 style="margin: 0; color: #0f766e; font-size: 20px;">💳 Tratamientos y Pagos</h2>
+        <div style="display: flex; gap: 15px;">
+            <span class="badge-paciente">Paciente: {{ pacienteSeleccionado?.persona?.nombres }}</span>
+            <button (click)="abrirModalTratamiento()" style="background: #0f766e; color: white; border: none; border-radius: 6px; padding: 6px 15px; cursor: pointer; font-weight: bold;">
+                ➕ Añadir Tratamiento
+            </button>
+        </div>
+    </div>
+
+    <table class="tabla-pacientes" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+                <th style="padding: 12px 15px; color: #475569;">Fecha / Servicio</th>
+                <th style="padding: 12px 15px; color: #475569; text-align: center;">Pieza</th>
+                <th style="padding: 12px 15px; color: #475569; text-align: right;">Costo</th>
+                <th style="padding: 12px 15px; color: #475569; text-align: right;">Abonado</th>
+                <th style="padding: 12px 15px; color: #475569; text-align: right;">Deuda</th>
+                <th style="padding: 12px 15px; color: #475569; text-align: center;">Estado</th>
+                <th style="padding: 12px 15px; color: #475569; text-align: center;">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="cargando">
+                <td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">
+                    ⏳ Calculando estados de cuenta...
+                </td>
+            </tr>
+
+            <ng-container *ngIf="!cargando">
+                <tr *ngFor="let trat of listaTratamientos" style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 15px;">
+                        <div style="font-size: 12px; color: #64748b;">{{ trat.fechaCreacion | date:'dd MMM yyyy' }}</div>
+                        <strong>{{ trat.catalogo?.nombre }}</strong>
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center; font-weight: bold; color: #0f766e;">
+                        {{ trat.diente ? '🦷 ' + trat.diente : '👄 General' }}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: right; color: #334155;">
+                        S/ {{ trat.catalogo?.precio_base | number:'1.2-2' }}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: right; color: #059669;">
+                        S/ {{ trat.abonado | number:'1.2-2' }}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: right; font-weight: bold;" 
+                        [ngStyle]="{'color': calcularDeuda(trat.catalogo?.precio_base, trat.abonado) > 0 ? '#dc2626' : '#94a3b8'}">
+                        S/ {{ calcularDeuda(trat.catalogo?.precio_base, trat.abonado) | number:'1.2-2' }}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center;">
+                        <span class="badge" [ngClass]="obtenerEstadoPago(trat.catalogo?.precio_base, trat.abonado)">
+                            {{ obtenerEstadoPago(trat.catalogo?.precio_base, trat.abonado) | uppercase }}
+                        </span>
+                    </td>
+
+                    <td style="padding: 15px; text-align: center;">
+                        <button *ngIf="calcularDeuda(trat.catalogo?.precio_base, trat.abonado) > 0" 
+                                (click)="prepararPago(trat)" 
+                                style="background: #10b981; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 12px; font-weight: bold;">
+                            💰 Cobrar
+                        </button>
+                    </td>
+                </tr>
+            </ng-container>
+            
+            <tr *ngIf="!cargando && listaTratamientos.length === 0">
+                <td colspan="7" style="text-align: center; padding: 40px; color: #64748b;">
+                    No hay tratamientos registrados para este paciente.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="mostrarModalPago" class="modal-fondo">
+        <div class="modal-cuerpo animacion-fade">
+            <h3 style="color: #0f766e; margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                Registrar Pago
+            </h3>
+            
+            <div style="background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                <p style="margin: 0; font-size: 14px;"><strong>Servicio:</strong> {{ tratamientoSeleccionado?.catalogo?.nombre }}</p>
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #dc2626;">
+                    <strong>Deuda Restante:</strong> S/ {{ calcularDeuda(tratamientoSeleccionado?.catalogo?.precio_base, tratamientoSeleccionado?.abonado) | number:'1.2-2' }}
+                </p>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #334155; font-size: 13px;">Monto a pagar (S/):</label>
+                <input type="number" [(ngModel)]="nuevoPago.monto" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #334155; font-size: 13px;">Método de Pago:</label>
+                <select [(ngModel)]="nuevoPago.metodo_pago" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="transferencia">Transferencia</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button (click)="mostrarModalPago = false" style="background: white; border: 1px solid #cbd5e1; color: #475569; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    Cancelar
+                </button>
+                <button (click)="guardarPago()" style="background: #0f766e; border: none; color: white; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    Confirmar Pago
+                </button>
+            </div>
+        </div>
+    </div>
+<div *ngIf="mostrarModalNuevoTratamiento" class="modal-fondo">
+        <div class="modal-cuerpo animacion-fade">
+            <h3 style="color: #0f766e; margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                🦷 Añadir Nuevo Tratamiento
+            </h3>
+            
+            <div style="background: #f8fafc; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                <p style="margin: 0; font-size: 14px;"><strong>Paciente:</strong> {{ pacienteSeleccionado?.persona?.nombres }} {{ pacienteSeleccionado?.persona?.apellidos }}</p>
+            </div>
+
+            <select [(ngModel)]="nuevoTratamiento.id_servicio"
+                style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                <option value="" disabled selected>Seleccione un servicio del catálogo...</option>
+                <option *ngFor="let srv of listaServiciosCatalogo" [value]="srv.id_catalogo_servicios">
+                    {{ srv.nombre }} (S/ {{ srv.precio_base || srv.precioBase | number:'1.2-2' }})
+                </option>
+            </select>
+            <br><br>
+            <select [(ngModel)]="nuevoTratamiento.id_odontologo"
+                style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;">
+                <option value="" disabled selected>Seleccione un doctor...</option>
+                <option *ngFor="let doc of listaOdontologos" [value]="doc.idUsuario || doc.id_usuario">
+                    {{ doc.persona?.nombres }} {{ doc.persona?.apellidos }}
+                </option>
+            </select>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #334155; font-size: 13px;">Zona a tratar:</label>
+                <div style="display: flex; gap: 15px; background: #f1f5f9; padding: 10px; border-radius: 4px; border: 1px solid #cbd5e1;">
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="radio" name="tipoAplicacion" value="general" [(ngModel)]="nuevoTratamiento.tipo_aplicacion">
+                        👄 Boca Completa (General)
+                    </label>
+                    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                        <input type="radio" name="tipoAplicacion" value="especifico" [(ngModel)]="nuevoTratamiento.tipo_aplicacion">
+                        🦷 Pieza Específica
+                    </label>
+                </div>
+            </div>
+
+            <div *ngIf="nuevoTratamiento.tipo_aplicacion === 'especifico'" style="margin-bottom: 15px; animation: fadeIn 0.3s;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #0f766e; font-size: 13px;">Número de Pieza (FDI):</label>
+                <input type="number" [(ngModel)]="nuevoTratamiento.diente" placeholder="Ej: 14, 21, 45..." style="width: 100%; padding: 8px; border: 2px solid #0f766e; border-radius: 4px; box-sizing: border-box; outline: none;">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px; color: #334155; font-size: 13px;">Observaciones / Notas:</label>
+                <textarea [(ngModel)]="nuevoTratamiento.observaciones" rows="3" placeholder="Opcional: Detalles del procedimiento..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button (click)="cerrarModalTratamiento()" style="background: white; border: 1px solid #cbd5e1; color: #475569; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                    Cancelar
+                </button>
+                <button (click)="guardarNuevoTratamiento()" 
+                        [disabled]="!nuevoTratamiento.id_servicio || !nuevoTratamiento.id_odontologo || (nuevoTratamiento.tipo_aplicacion === 'especifico' && !nuevoTratamiento.diente)" 
+                        [ngStyle]="{'opacity': (!nuevoTratamiento.id_servicio || !nuevoTratamiento.id_odontologo || (nuevoTratamiento.tipo_aplicacion === 'especifico' && !nuevoTratamiento.diente)) ? '0.5' : '1', 'cursor': (!nuevoTratamiento.id_servicio || !nuevoTratamiento.id_odontologo || (nuevoTratamiento.tipo_aplicacion === 'especifico' && !nuevoTratamiento.diente)) ? 'not-allowed' : 'pointer'}"
+                        style="background: #0f766e; border: none; color: white; padding: 8px 15px; border-radius: 4px; font-weight: bold;">
+                    Crear Tratamiento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

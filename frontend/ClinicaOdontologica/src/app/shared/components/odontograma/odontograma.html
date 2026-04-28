@@ -1,0 +1,36 @@
+<div class="odontograma-container">
+    
+    <div class="arcada superior">
+        @for (diente of dientesArriba; track diente) {
+            <div class="diente-box" 
+                 [class.solo-lectura]="modoLectura"
+                 (click)="seleccionarDiente(diente)">
+                
+                <span class="diente-numero">{{ diente }}</span>
+                
+                <div class="diente-dibujo">
+                    🦷
+                </div>
+
+            </div>
+        }
+    </div>
+
+    <div class="separador-boca"></div>
+
+    <div class="arcada inferior">
+        @for (diente of dientesAbajo; track diente) {
+            <div class="diente-box" 
+                 [class.solo-lectura]="modoLectura"
+                 (click)="seleccionarDiente(diente)">
+                
+                <div class="diente-dibujo">
+                    🦷
+                </div>
+                <span class="diente-numero">{{ diente }}</span>
+                
+            </div>
+        }
+    </div>
+
+</div>

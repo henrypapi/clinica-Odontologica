@@ -1,0 +1,67 @@
+.odontograma-container {
+    background-color: #f8fcfc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Alineamos los dientes en una fila horizontal */
+.arcada {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Espacio entre dientes */
+    margin-bottom: 20px;
+}
+
+/* Ponemos un espacio extra entre los incisivos centrales (11-21 y 41-31) */
+.arcada .diente-box:nth-child(8) {
+    margin-right: 30px; 
+}
+
+/* La cajita de cada diente */
+.diente-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.diente-box:hover {
+    transform: scale(1.1); /* Efecto zoom al pasar el mouse */
+}
+
+/* Si es modo historial, no hacemos efecto de botón */
+.diente-box.solo-lectura {
+    cursor: default;
+}
+.diente-box.solo-lectura:hover {
+    transform: none; 
+}
+
+.diente-numero {
+    font-weight: bold;
+    color: #333;
+    margin: 5px 0;
+}
+
+.diente-dibujo {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.separador-boca {
+    height: 2px;
+    background-color: #006064;
+    margin: 20px 0;
+    opacity: 0.3;
+}

@@ -1,0 +1,166 @@
+/* Contenedor Principal: Centra todo y pone el fondo */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* Degradado suave azul/clínico */
+  background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* La Tarjeta Blanca */
+.login-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px); /* Efecto de flotar al pasar el mouse */
+}
+
+/* Header y Logo */
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.login-header h2 {
+  color: #006064; /* Azul oscuro */
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.login-header p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+/* Inputs Animados (Floating Labels) */
+.input-group {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #333;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  background: transparent;
+  transition: border-color 0.3s;
+}
+
+.input-group label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 16px;
+  color: #999;
+  pointer-events: none; /* Permite hacer clic a través del label */
+  transition: 0.3s ease all;
+}
+
+/* LA ANIMACIÓN: Cuando haces click o escribes, el label sube */
+.input-group input:focus ~ label,
+.input-group input:valid ~ label {
+  top: -20px;
+  font-size: 12px;
+  color: #00bcd4; /* Color turquesa al activar */
+}
+
+/* Barra animada debajo del input */
+.input-group .bar {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input-group .bar:before, .input-group .bar:after {
+  content: '';
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #00bcd4;
+  transition: 0.2s ease all;
+}
+
+.input-group .bar:before { left: 50%; }
+.input-group .bar:after { right: 50%; }
+
+.input-group input:focus ~ .bar:before,
+.input-group input:focus ~ .bar:after {
+  width: 50%;
+}
+
+/* Botón */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(to right, #00bcd4, #0097a7);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-login:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
+}
+
+.btn-login i {
+  margin-left: 8px;
+}
+
+/* Enlaces extra */
+.forgot-pass {
+  text-align: right;
+  margin-bottom: 1.5rem;
+}
+
+.forgot-pass a, .login-footer a {
+  color: #0097a7;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.forgot-pass a:hover, .login-footer a:hover {
+  text-decoration: underline;
+}
+
+.login-footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.regresar {
+  position: relative;
+  top: -250px;   
+  right: 180px;
+  color: #0097a7;
+  text-decoration: none;
+}
+
+.regresar:hover{
+  text-decoration: underline;
+}

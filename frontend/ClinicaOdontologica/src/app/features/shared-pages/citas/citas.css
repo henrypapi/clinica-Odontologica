@@ -1,0 +1,544 @@
+/* --- LA ANIMACIÓN BONITA --- */
+.animacion-entrada {
+    animation: slideInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+@keyframes slideInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- ESTRUCTURA DE LA PANTALLA --- */
+.contenedor-agenda {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- DISEÑO PREMIUM (Tarjetas) --- */
+.tarjeta-premium {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(15, 118, 110, 0.1);
+}
+
+.tarjeta-premium h2 {
+    color: #0f766e;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 24px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+/* --- FORMULARIO --- */
+.grupo-input {
+    margin-bottom: 20px;
+}
+
+.grupo-input label {
+    display: block;
+    margin-bottom: 8px;
+    color: #475569;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.input-moderno {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+.input-moderno:focus {
+    outline: none;
+    border-color: #0f766e;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+    background: #ffffff;
+}
+
+.btn-agendar {
+    width: 100%;
+    padding: 14px;
+    background: #0f766e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-agendar:hover {
+    background: #0d5e58;
+    transform: translateY(-2px);
+}
+
+/* --- LISTA DE CITAS --- */
+.tarjeta-cita {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 5px solid #0f766e;
+    transition: transform 0.2s;
+}
+
+.tarjeta-cita:hover {
+    transform: translateX(5px);
+}
+
+.cita-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cita-info strong {
+    color: #1e293b;
+    font-size: 16px;
+}
+
+.cita-info span {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.motivo {
+    font-style: italic;
+}
+
+/* Colores dinámicos para el estado de la cita */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+.programada { background: #3b82f6; } /* Azul */
+.confirmada { background: #10b981; } /* Verde */
+.cancelada { background: #ef4444; } /* Rojo */
+.asistio { background: #8b5cf6; } /* Morado */
+
+/* --- ESTILOS DEL MENÚ TABS --- */
+.dashboard-citas {
+    max-width: 1000px; /* Lo centramos como un panel principal */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.menu-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    background: #f1f5f9;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.menu-tabs button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-tabs button:hover {
+    background: #e2e8f0;
+}
+
+.menu-tabs button.activo {
+    background: #0f766e;
+    color: white;
+    box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+}
+
+/* Transición suave al cambiar de pestaña */
+.animacion-fade {
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* El fondo oscuro semitransparente que cubre toda la pantalla */
+.overlay-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.75); /* Fondo oscuro estilo premium */
+    backdrop-filter: blur(4px); /* Efecto de desenfoque bonito */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Para que quede por encima de todo */
+}
+
+/* La caja blanca del mensaje */
+.caja-modal {
+    background-color: #1e293b; /* Ajusta al color de tus tarjetas premium */
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    border: 1px solid #334155;
+}
+
+.icono-alerta {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.botones-modal {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.btn-cancelar-modal {
+    flex: 1;
+    padding: 12px;
+    background-color: transparent;
+    border: 1px solid #64748b;
+    color: #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-cancelar-modal:hover {
+    background-color: #334155;
+    color: white;
+}
+
+.btn-confirmar-modal {
+    flex: 1;
+    padding: 12px;
+    background-color: #10b981; /* Verde esmeralda */
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-confirmar-modal:hover {
+    background-color: #059669; /* Verde más oscuro al pasar el mouse */
+}
+
+/* ==========================================================================
+   EL TOAST (NOTIFICACIÓN FLOTANTE) 100% OCULTO
+   ========================================================================== */
+.toast-flotante {
+    /* 1. Lo hace flotar por encima de todo, sin importar dónde esté en el HTML */
+    position: fixed !important; 
+    bottom: 30px;
+    right: 30px;
+    
+    /* 2. LA MAGIA PARA OCULTARLO: Lo empuja fuera de la pantalla hacia la derecha y lo hace transparente */
+    transform: translateX(150%);
+    opacity: 0;
+    visibility: hidden; /* 👈 ESCUDO EXTRA: Lo borra físicamente del espacio de la página */
+    pointer-events: none; /* Evita que se le pueda hacer clic accidentalmente cuando está oculto */
+    
+    /* 3. Estilos visuales */
+    background-color: #10b981; /* Verde esmeralda */
+    color: white;
+    padding: 16px 24px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 999999 !important; /* Capa altísima para que nada lo cubra */
+    min-width: 250px;
+    
+    /* 4. La animación suave de entrada y salida */
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
+}
+
+/* Cuando Angular activa esta clase, el toast se hace visible y entra a la pantalla */
+.toast-flotante.mostrar {
+    transform: translateX(0); /* Vuelve a su posición original */
+    opacity: 1; /* Se vuelve 100% visible */
+    visibility: visible;
+    pointer-events: auto; /* Ya se puede tocar */
+}
+
+/* Si es un error, cambia el fondo a rojo */
+.toast-flotante.toast-error {
+    background-color: #ef4444 !important; 
+}
+
+.toast-icono {
+    font-size: 24px;
+}
+
+.toast-texto {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   📅 CALENDARIO SEMANAL (ESTILO GOOGLE CALENDAR)
+   ========================================================================== */
+
+.contenedor-calendario {
+    padding: 20px;
+}
+
+/* --- 1. TOOLBAR (BOTONES SUPERIORES) --- */
+.calendario-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.calendario-toolbar h2 {
+    color: #1e293b;
+    font-size: 20px;
+}
+
+.botones-navegacion {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-nav {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-nav:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.icon-nav {
+    padding: 8px 12px;
+}
+
+/* --- 2. EL ESQUELETO DEL GRID --- */
+.calendario-grid {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+/* --- 3. CABECERA DE LOS DÍAS --- */
+.grid-cabecera {
+    display: flex;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.celda-vacia-esquina {
+    width: 60px; /* Ancho de la columna de horas */
+    flex-shrink: 0;
+    border-right: 1px solid #e2e8f0;
+}
+
+.celda-dia-cabecera {
+    flex: 1; /* Reparte el espacio por igual entre los 7 días */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    border-right: 1px solid #e2e8f0;
+}
+
+.celda-dia-cabecera:last-child {
+    border-right: none;
+}
+
+.nombre-dia {
+    font-size: 13px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.numero-dia {
+    font-size: 24px;
+    color: #1e293b;
+    font-weight: bold;
+    margin-top: 4px;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* El círculo azul para el día actual */
+.dia-actual .nombre-dia {
+    color: #0ea5e9; /* Azul cielo */
+}
+
+.dia-actual .numero-dia {
+    background-color: #0ea5e9;
+    color: white;
+}
+
+/* --- 4. CUERPO DEL CALENDARIO (ZONA CON SCROLL) --- */
+.grid-cuerpo {
+    display: flex;
+    height: 600px;
+    overflow-y: auto;
+}
+
+/* Agrega esto justo debajo de .grid-cuerpo para darle respiro al final del scroll */
+.columnas-dias, .columna-horas {
+    margin-bottom: 20px; 
+}
+/* Columna de Horas */
+.columna-horas {
+    width: 60px;
+    flex-shrink: 0;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0; 
+    background: #ffffff;
+    height: max-content; /* 🔥 EL FIX MÁGICO: Fuerza a la columna a crecer hasta el fondo */
+}
+.celda-hora {
+    height: 60px; 
+    box-sizing: border-box;
+    position: relative; /* Necesario para el truco del texto */
+}
+
+.celda-hora span {
+    position: absolute;
+    right: 8px;
+    top: -8px; /* 🔥 Sube el texto para que corte exactamente la línea 🔥 */
+    font-size: 11px;
+    color: #94a3b8;
+    background: #ffffff; /* Le da un fondito blanco al texto para que no se raye */
+    padding: 0 4px;
+}
+
+/* Columnas de los 7 Días */
+.columnas-dias {
+    display: flex;
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0; 
+    height: max-content; /* 🔥 EL FIX MÁGICO: Fuerza a las paredes verticales a llegar hasta el final */
+}
+
+.columna-dia {
+    flex: 1;
+    border-right: 1px solid #e2e8f0;
+    position: relative; /* CRÍTICO: La "Jaula" para que las citas floten aquí adentro */
+}
+
+.columna-dia:last-child {
+    border-right: none;
+}
+
+/* Las líneas horizontales de fondo (Las grillas) */
+.linea-hora-fondo {
+    height: 60px; 
+    box-sizing: border-box;
+    border-top: 1px solid #e2e8f0; /* 🔥 Cambiado a border-top 🔥 */
+}
+
+/* El día de hoy tiene un fondo ligeramente diferente */
+.columna-dia:nth-child(n) /* Aquí puedes agregar la clase dia-actual si lo pasas desde el HTML */ {
+    background-color: #ffffff;
+}
+
+/* --- 5. 🔥 LOS BLOQUES DE LAS CITAS FLOTANTES 🔥 --- */
+.bloque-cita {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    margin-top: 1px; /* Evita que el bloque tape la raya superior */
+    border-radius: 6px;
+    color: white;
+    padding: 6px;
+    box-sizing: border-box;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 3px solid rgba(255,255,255,0.3);
+    z-index: 10;
+    transition: transform 0.2s, filter 0.2s;
+    cursor: pointer;
+}
+
+.bloque-cita:hover {
+    transform: scale(1.02); /* Efecto de crecer al pasar el mouse */
+    filter: brightness(1.1);
+    z-index: 20;
+}
+
+.cita-contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cita-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Pone "..." si el texto es muy largo */
+}
+
+.cita-hora, .cita-paciente {
+    font-size: 10px;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* Espacio extra en la parte superior del grid para que el primer texto no se corte */
+.espaciador-top {
+    height: 15px;
+    box-sizing: border-box;
+}
