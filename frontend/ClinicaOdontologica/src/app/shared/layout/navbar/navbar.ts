@@ -25,7 +25,7 @@ export class Navbar {
     { label: 'Inicio', path: '/home' },
     { label: 'Nosotros', path: '/about' },
     { label: 'Servicios', path: '/services' },
-    { label: 'Doctores', path: '/doctors' },
+    //{ label: 'Doctores', path: '/doctors' },
     { label: 'Contacto', path: '/contact' }
   ];
 
