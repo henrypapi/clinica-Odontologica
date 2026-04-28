@@ -10,7 +10,7 @@ public class Persona {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_personas") // Ojo: en tu SQL dice 'id_personas' (plural)
+    @Column(name = "id_personas")
     private Integer id;
 
     @Column(name = "nombres")
