@@ -1,20 +1,22 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { PacientesService } from '../../../features/shared-pages/pacientes/pacientes.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-registro-paciente',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './registro-paciente.html',
   styleUrl: './registro-paciente.css',
 })
 export class RegistroPaciente {
   registroPacienteSeleccionado = false;
   @Output() pacienteCreado = new EventEmitter<any>();
-
-  // --- PASO 1: EL MOLDE DE DATOS ---
-  // Este objeto tiene la estructura exacta que Java espera para guardar ambos: Paciente y Persona
+  @Output() cancelarRegistro = new EventEmitter<void>();
+  private router = inject(Router);
+  cdr = inject(ChangeDetectorRef);
   nuevoPaciente = {
     persona: {
       nombres: '',
@@ -47,8 +49,7 @@ export class RegistroPaciente {
   }
 
   CancelarRegistroPaciente() {
-    this.registroPacienteSeleccionado = false;
-    this.ocultarBotonRegistro(this.registroPacienteSeleccionado);
+    this.cancelarRegistro.emit();
   }
 
   ocultarBotonRegistro(registroPacienteSeleccionado: Boolean): void {
@@ -59,13 +60,10 @@ export class RegistroPaciente {
   }
 
 cambiarDocumento(): void {
-    // 1. Leemos el tipo directamente desde nuestro modelo, sin tocar el HTML
     const tipo = this.nuevoPaciente.persona.tipoDocumento;
 
-    // 2. Limpiamos el número anterior por si el usuario se equivocó y cambió de opinión
     this.nuevoPaciente.persona.numeroDocumento = '';
 
-    // 3. Actualizamos nuestras variables de control
     if (tipo === "dni") {
       this.docMaxLength = 8;
       this.docPattern = "[0-9]{8}";
@@ -84,30 +82,51 @@ cambiarDocumento(): void {
   }
 
 registroPacienteenDB() {
-    // 1. Validación rápida: obligar a que al menos ponga nombre y documento
     if (!this.nuevoPaciente.persona.nombres || !this.nuevoPaciente.persona.numeroDocumento) {
       alert('⚠️ Por favor, ingrese al menos el nombre y el número de documento del paciente.');
       return; 
     }
 
-    // 2. Llamamos al servicio y le entregamos el molde lleno de datos
     this.pacientesService.registrarPaciente(this.nuevoPaciente).subscribe({
       
-      // Si Java responde "Todo salió bien (Código 200 OK)":
       next: (respuestaServidor) => {
         alert('✅ ¡Paciente registrado con éxito en la Base de Datos!');
         this.pacienteCreado.emit(respuestaServidor);
-        
-        // Cerramos la cajita del formulario para limpiar la pantalla
         this.CancelarRegistroPaciente(); 
+        setTimeout(() => {
+          this.CancelarRegistroPaciente();
+          this.cdr.detectChanges();
+        }, 2000);
       },
-
-      // Si Java responde "Hubo un error (ej. la base de datos está apagada)":
       error: (error) => {
         console.error('Error detallado:', error);
         alert('❌ Hubo un error al registrar el paciente. Revisa la consola (F12).');
       }
       
     });
+  }
+  vistaActual: string = 'pacientes'; 
+  cambiarVista(nuevaVista: string) {
+    this.vistaActual = nuevaVista;
+    
+  }
+
+  mostrarModal: boolean = false;
+
+  abrirModalConfirmacion() {
+    if (!this.nuevoPaciente.persona.nombres || !this.nuevoPaciente.persona.numeroDocumento) {
+      alert('⚠️ Por favor, ingrese al menos el nombre y el número de documento.');
+      return; 
+    }
+    this.mostrarModal = true;
+  }
+
+  cerrarModalConfirmacion() {
+    this.mostrarModal = false;
+  }
+
+  confirmarRegistro() {
+    this.mostrarModal = false;
+    this.registroPacienteenDB(); 
   }
 }

@@ -32,8 +32,8 @@
         </div>
 
         <div class="grupo-input">
-            <label>Correo Electrónico <span class="req">*</span></label>
-            <input type="email" [(ngModel)]="nuevoPaciente.persona.email" class="input-moderno" placeholder="correo@ejemplo.com" required>
+            <label>Correo Electrónico <span class="opcional">(opcional)</span></label>
+            <input type="email" [(ngModel)]="nuevoPaciente.persona.email" class="input-moderno" placeholder="correo@ejemplo.com">
         </div>
 
         <div class="grupo-input">
@@ -42,8 +42,8 @@
         </div>
 
         <div class="grupo-input">
-            <label>Dirección <span class="req">*</span></label>
-            <input type="text" [(ngModel)]="nuevoPaciente.persona.direccion" class="input-moderno" placeholder="Av. Principal 123" required>
+            <label>Dirección <span class="opcional">(Opcional)</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.persona.direccion" class="input-moderno" placeholder="Av. Principal 123" >
         </div>
 
         <div class="grupo-input">
@@ -61,8 +61,8 @@
         </div>
 
         <div class="grupo-input">
-            <label>Grupo Sanguíneo <span class="req">*</span></label>
-            <input type="text" [(ngModel)]="nuevoPaciente.grupoSanguineo" class="input-moderno" placeholder="Ej. O+" required>
+            <label>Grupo Sanguíneo <span class="opcional">(Opcional)</span></label>
+            <input type="text" [(ngModel)]="nuevoPaciente.grupoSanguineo" class="input-moderno" placeholder="Ej. O -">
         </div>
 
         <div class="grupo-input">
@@ -91,8 +91,21 @@
         <button type="button" class="btn-cancelar" (click)="CancelarRegistroPaciente()">
             Cancelar
         </button>
-        <button type="button" class="btn-guardar" (click)="registroPacienteenDB()">
+        <button type="button" class="btn-guardar" (click)="abrirModalConfirmacion()">
             💾 Registrar Paciente
         </button>
+    </div>
+</div>
+
+<div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-contenido animacion-fade">
+        <div style="font-size: 3rem; text-align: center; margin-bottom: 10px;">❓</div>
+        <h3 style="text-align: center; color: #0f766e; margin-bottom: 10px;">Confirmar Registro</h3>
+        <p style="text-align: center; color: #475569; margin-bottom: 20px;">¿Está seguro de que desea registrar a <strong>{{ nuevoPaciente.persona.nombres || 'este paciente' }}</strong> en el sistema de la clínica?</p>
+        
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button type="button" class="btn-cancelar" style="flex: 1;" (click)="cerrarModalConfirmacion()">No, revisar</button>
+            <button type="button" class="btn-guardar" style="flex: 1;" (click)="confirmarRegistro()">Sí, registrar</button>
+        </div>
     </div>
 </div>
