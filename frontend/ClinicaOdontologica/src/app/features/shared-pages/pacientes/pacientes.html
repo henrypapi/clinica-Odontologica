@@ -118,7 +118,10 @@
     </div>
 
     <div *ngIf="vistaActual === 'registro'">
-        <app-registro-paciente ></app-registro-paciente>
+        <app-registro-paciente 
+            (cancelarRegistro)="cambiarVista('lista')"
+            (pacienteCreado)="cambiarVista('lista')">
+        </app-registro-paciente>
     </div>
     <div *ngIf="vistaActual === 'historial-citas'">
         <app-historial-citas [pacienteSeleccionado]="pacienteSeleccionado"></app-historial-citas>
