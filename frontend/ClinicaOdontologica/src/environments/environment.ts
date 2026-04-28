@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://clinica-odontologica-hazel.vercel.app/api' 
+  apiUrl: 'https://clinica-odontologica-1-5uyo.onrender.com' 
 };
