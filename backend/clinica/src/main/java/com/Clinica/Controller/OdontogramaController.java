@@ -13,15 +13,8 @@ import java.util.List;
 @RequestMapping("/api/odontogramas")
 @CrossOrigin(origins = "http://localhost:4200")
 public class OdontogramaController {
-    
-    // ¡AQUÍ DECLARAMOS (INYECTAMOS) LA INTERFAZ!
-    // Spring le asignará la clase mágica que creó por detrás.
     @Autowired
     private OdontogramaRepository odontogramaRepository;
-
-    // Endpoint para buscar todos los odontogramas de un paciente
-
-    // Endpoint para guardar un nuevo odontograma con sus dientes pintados
     @PostMapping("/guardar")
     public ResponseEntity<Odontograma> guardarOdontograma(@RequestBody Odontograma nuevoOdontograma) {
         

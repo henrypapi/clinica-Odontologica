@@ -1,6 +1,7 @@
 package com.Clinica.Model;
 
-import jakarta.persistence.*; // IMPORTANTE: Esto trae las herramientas de base de datos
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*; 
 
 @Entity
 @Table(name = "usuario") 
@@ -9,7 +10,7 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Es AUTO_INCREMENT
     @Column(name = "id_usuario")
-    private int idUsuario;
+    private Integer idUsuario;
 
     @OneToOne
     @JoinColumn(name = "id_persona", referencedColumnName = "id_personas")
@@ -17,7 +18,8 @@ public class Usuario {
 
     @Column(nullable = false, unique = true)
     private String username;
-
+    
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password_hash", nullable = false) // En Java se llama password, en DB password_hash
     private String password;
 
@@ -31,7 +33,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int idUsuario, String username, String password, String rol, String activo) {
+    public Usuario(Integer idUsuario, String username, String password, String rol, String activo) {
         this.idUsuario = idUsuario;
         this.username = username;
         this.password = password;
@@ -40,8 +42,8 @@ public class Usuario {
     }
 
     // --- GETTERS Y SETTERS ---
-    public int getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
+    public Integer getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
 
     public Persona getPersona() { return persona; }
     public void setPersona(Persona persona) { this.persona = persona; }

@@ -9,13 +9,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:4200") // Permitimos que Angular se conecte
+@CrossOrigin(origins = "http://localhost:4200")
 
 public class AuthController {
 
@@ -29,34 +31,27 @@ public class AuthController {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JwtUtil jwtUtil; // Nuestra fábrica de tokens
+    private JwtUtil jwtUtil;
 
-    // Endpoint que escucha el POST de Angular
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         
         try {
-            // 1. Spring Security intenta loguear al usuario comprobando la contraseña
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
-        } catch (Exception e) {
-            // Si la contraseña está mal, lanzamos un error 401 (No autorizado)
+        } catch (DisabledException e) {
+            return ResponseEntity.status(403).body("La cuenta esta desactivada");
+            
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Error de autenticación al intentar ingresar");
         }
-
-        // 2. Si pasó la validación, buscamos sus datos completos
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-
-        // 3. ¡Fabricamos el Token JWT!
         final String jwt = jwtUtil.generateToken(userDetails);
-
-        // EXTRAER EL ROL DINÁMICO:
-        // Las autoridades vienen como una lista, así que tomamos la primera que tenga asignada.
         String rolUsuario = userDetails.getAuthorities().iterator().next().getAuthority();
-        
-        // (Opcional) Spring a veces le agrega el prefijo "ROLE_" (ej. "ROLE_ADMIN"). 
-        // Si quieres quitarle ese prefijo para que a Angular le llegue limpio ("ADMIN"), descomenta esto:
         if (rolUsuario.startsWith("ROLE_")) {
            rolUsuario = rolUsuario.substring(5);
         }
@@ -64,7 +59,6 @@ public class AuthController {
         com.Clinica.Model.Usuario usuarioReal = usuarioRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // 4. Empaquetamos el token para enviárselo a Angular
         Map<String, String> response = new HashMap<>();
         response.put("token", jwt);
         response.put("username", userDetails.getUsername());
@@ -73,13 +67,10 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 }
-
-// Una pequeña clase auxiliar para recibir los datos de Angular
 class LoginRequest {
     private String username;
     private String password;
-
-    // Getters y Setters
+    
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
