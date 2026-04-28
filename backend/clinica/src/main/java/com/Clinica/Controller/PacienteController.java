@@ -10,13 +10,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pacientes")
-@CrossOrigin(origins = "http://localhost:4200") // Permiso para tu Angular
+@CrossOrigin(origins = {"http://localhost:4200", "https://clinica-odontologica-hazel.vercel.app"})
 public class PacienteController {
 
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    // Endpoint para obtener la lista completa de pacientes
     @GetMapping
     public ResponseEntity<List<Paciente>> obtenerTodosLosPacientes() {
         List<Paciente> pacientes = pacienteRepository.findAll();

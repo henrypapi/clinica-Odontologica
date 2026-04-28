@@ -61,8 +61,7 @@ public class SecurityConfig {
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
         
-        // 1. ¿A quién dejamos pasar? A tu Angular
-        configuration.setAllowedOrigins(java.util.Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(java.util.Arrays.asList("http://localhost:4200", "https://clinica-odontologica-hazel.vercel.app"));
         
         // 2. ¿Qué métodos permitimos? POST (guardar), GET (leer), OPTIONS (preflight), etc.
         configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -70,7 +69,6 @@ public class SecurityConfig {
         // 3. ¿Qué cabeceras especiales permitimos? Authorization (nuestro Token) y Content-Type (nuestro JSON)
         configuration.setAllowedHeaders(java.util.Arrays.asList("Authorization", "Content-Type"));
 
-        configuration.setAllowedHeaders(java.util.Arrays.asList("*")); // <-- CAMBIA ESTO PARA EVITAR BLOQUEOS
         
         // Aplicamos estas reglas a TODAS las rutas de tu API ("/**")
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();

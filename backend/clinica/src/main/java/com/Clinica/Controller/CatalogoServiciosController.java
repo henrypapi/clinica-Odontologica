@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/servicios") // La ruta exacta que pusimos en citas.service.ts
-@CrossOrigin(origins = "http://localhost:4200") // ¡Súper importante para que Angular no dé error de CORS!
+@CrossOrigin(origins = {"http://localhost:4200", "https://clinica-odontologica-hazel.vercel.app"})
 public class CatalogoServiciosController {
 
     @Autowired
