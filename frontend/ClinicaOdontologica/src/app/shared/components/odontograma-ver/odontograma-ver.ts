@@ -48,18 +48,14 @@ export class OdontogramaVer implements OnInit, OnChanges {
     this.inicializarMapa();
   }
 
-  // 1. Cuando el componente NACE (gracias al *ngIf)
   ngOnInit(): void {
     if (this.pacienteSeleccionado) {
-      console.log('✅ OnInit: Odontograma despertó con el paciente:', this.pacienteSeleccionado);
       this.cargarHistorialPaciente();
     }
   }
 
-  // 2. Cuando el paciente CAMBIA mientras el componente está vivo
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pacienteSeleccionado'] && !changes['pacienteSeleccionado'].firstChange) {
-      console.log('🔄 OnChanges: El doctor cambió de paciente:', this.pacienteSeleccionado);
       this.cargarHistorialPaciente();
     }
   }
@@ -70,13 +66,11 @@ export class OdontogramaVer implements OnInit, OnChanges {
     this.modoEdicion = true;
     this.inicializarMapa();
 
-    // Validamos cómo se llama el ID del paciente en tu BD (puede ser idPaciente o id_paciente)
     const idParaBuscar = this.pacienteSeleccionado.idPaciente || this.pacienteSeleccionado.id_paciente;
 
     this.odontogramaService.obtenerHistorialDePaciente(idParaBuscar).subscribe({
       next: (historial) => {
         this.historialOdontogramas = historial;
-        console.log('📚 Historial descargado:', historial);
         this.cdr.detectChanges();
       },
       error: (err) => console.error('❌ Error al cargar el historial', err)
@@ -84,10 +78,8 @@ export class OdontogramaVer implements OnInit, OnChanges {
   }
 
   verOdontogramaAntiguo(odontograma: any) {
-    console.log('🔍 Cargando odontograma antiguo:', odontograma);
     this.inicializarMapa();
 
-    // Verificamos si los detalles existen en 'detalles' o quizás Spring Boot los mandó como 'detalleOdontograma'
     const detallesDelRegistro = odontograma.detalles || odontograma.detalleOdontograma || odontograma.detallesOdontograma;
 
     if (detallesDelRegistro && detallesDelRegistro.length > 0) {
@@ -109,7 +101,7 @@ export class OdontogramaVer implements OnInit, OnChanges {
         }
       });
     } else {
-      console.warn('⚠️ Este odontograma no tiene detalles registrados o la variable tiene otro nombre.');
+      console.warn(' Este odontograma no tiene detalles registrados o la variable tiene otro nombre.');
     }
 
     this.modoEdicion = false; 
@@ -199,7 +191,6 @@ export class OdontogramaVer implements OnInit, OnChanges {
       return;
     }
 
-    // Aseguramos enviar el ID correcto del paciente
     const idParaGuardar = this.pacienteSeleccionado.idPaciente || this.pacienteSeleccionado.id_paciente;
 
     const paqueteFinal = {
@@ -210,12 +201,11 @@ export class OdontogramaVer implements OnInit, OnChanges {
       detalles: detallesParaGuardar
     };
 
-    console.log('🚀 Enviando esto a Spring Boot:', paqueteFinal);
 
     this.odontogramaService.guardarOdontograma(paqueteFinal).subscribe({
       next: (respuesta) => {
-        alert('✅ ¡Odontograma guardado en la Base de Datos con éxito!');
-        this.cargarHistorialPaciente(); // Recargamos para que aparezca en la lista
+        alert('¡Odontograma guardado en la Base de Datos con éxito!');
+        this.cargarHistorialPaciente();
       },
       error: (error) => {
         alert('❌ Hubo un error al guardar. Revisa la consola.');

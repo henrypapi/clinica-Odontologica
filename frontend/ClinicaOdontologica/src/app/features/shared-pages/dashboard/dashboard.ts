@@ -42,7 +42,7 @@ export class Dashboard implements OnInit {
   public ingresosChartData: ChartConfiguration<'line'>['data'] = {
     labels: ['Mes -5', 'Mes -4', 'Mes -3', 'Mes -2', 'Mes -1', 'Mes Actual'],
     datasets: [{
-      data: [0, 0, 0, 0, 0, 0], // Se llenará con los 6 meses de Java
+      data: [0, 0, 0, 0, 0, 0],
       label: 'Ingresos Mensuales (S/)',
       fill: true,
       tension: 0.4,
@@ -75,6 +75,7 @@ export class Dashboard implements OnInit {
 
         if (datos.ingresosGrafico && datos.ingresosGrafico.length > 0) {
             this.ingresosChartData.datasets[0].data = datos.ingresosGrafico;
+            this.ingresosChartData.labels = this.generarEtiquetasMeses();
             this.ingresosChartData = { ...this.ingresosChartData }; 
         }
         if (datos.serviciosLabels && datos.serviciosData) {
@@ -117,5 +118,16 @@ export class Dashboard implements OnInit {
     } else {
       this.generandoPDF = false;
     }
+  }
+  generarEtiquetasMeses(): string[] {
+    const nombresMeses = [];
+    const fecha = new Date();
+    let i=0;
+    for (i = 5; i >= 0; i--) {
+      const mesRef = new Date(fecha.getFullYear(), fecha.getMonth() - i, 1);
+      const nombreMes = mesRef.toLocaleString('es-ES', { month: 'long' });
+      nombresMeses.push(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1));
+    }
+    return nombresMeses;
   }
 }

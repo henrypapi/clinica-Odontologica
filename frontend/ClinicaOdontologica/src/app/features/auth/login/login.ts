@@ -33,7 +33,6 @@ export class Login {
       
       this.authService.login(datosLogin).subscribe({
         next: (respuesta: any) => {
-          console.log('¡Login exitoso!', respuesta);
           alert('Bienvenido ' + respuesta.username); 
           this.authService.guardarSesion(respuesta);
           
