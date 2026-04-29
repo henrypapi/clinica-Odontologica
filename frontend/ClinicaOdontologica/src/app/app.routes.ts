@@ -6,6 +6,8 @@ import { About } from './features/public/about/about';
 import { Services } from './features/public/services/services';
 import { Doctors } from './features/public/doctors/doctors';
 import { Contact } from './features/public/contact/contact';
+import { adminGuard } from './features/auth/admin.guard';
+import { empleadoGuard } from './features/auth/empleado.guard';
 
 export const routes: Routes = [
   
@@ -29,15 +31,12 @@ export const routes: Routes = [
       { path: 'services', component: Services },
       { path: 'contact', component: Contact },
 
-      { 
-        path: 'dashboard', 
-        loadComponent: () => import('./features/shared-pages/dashboard/dashboard').then(m => m.Dashboard)
-      },
+      
 
       // --- C. ADMIN (Sus propias páginas exclusivas) ---
       {
         path: 'admin',
-        // Carga un archivo de rutas aparte para no ensuciar este
+        canActivate: [adminGuard],
         loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes)
 
         //añadir los routes
@@ -46,6 +45,7 @@ export const routes: Routes = [
       // --- D. EMPLEADO (Sus propias páginas exclusivas) ---
       {
         path: 'empleado',
+        canActivate: [empleadoGuard],
         loadChildren: () => import('./features/empleado/empleado.routes').then(m => m.empleadoRoutes)
       }
     ]

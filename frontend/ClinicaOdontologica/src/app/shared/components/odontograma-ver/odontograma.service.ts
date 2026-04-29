@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
@@ -12,36 +12,10 @@ export class OdontogramaService {
   private apiUrl = `${environment.apiUrl}/api/odontogramas`;
 
   guardarOdontograma(datosOdontograma: any): Observable<any> {
-    
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      
-      const token = usuario.token; 
-
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      }
-    } 
-
-    return this.http.post(`${this.apiUrl}/guardar`, datosOdontograma, { headers });
+    return this.http.post(`${this.apiUrl}/guardar`, datosOdontograma);
   }
 
   obtenerHistorialDePaciente(idPaciente: number): Observable<any[]> {
-    
-    // 1. Buscamos la pulsera de seguridad
-    const userGuardado = localStorage.getItem('usuario_dental');
-    let headers = new HttpHeaders();
-
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-
-    return this.http.get<any[]>(`${this.apiUrl}/paciente/${idPaciente}`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/paciente/${idPaciente}`);
   }
 }

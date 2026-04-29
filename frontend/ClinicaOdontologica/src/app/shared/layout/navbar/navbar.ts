@@ -70,18 +70,19 @@ export class Navbar {
       const rol= user.rol;
       
       switch (rol) {
-      case 'admin':
+      case 'ROLE_admin':
         return this.menuAdmin;
       
-      case 'empleado':
+      case 'ROLE_empleado':
         return this.menuEmpleado;
       
-      case 'cliente': 
+      case 'ROLE_cliente': 
         return this.menuCliente;
       
       default:
-        
+        console.log("este es el rol",user.rol);
         return this.menuCliente; 
+
     }
   });
 

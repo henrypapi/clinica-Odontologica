@@ -1,5 +1,6 @@
 package com.Clinica.Security;
 
+import io.jsonwebtoken.ExpiredJwtException; // 🌟 IMPORTANTE: Agregamos esta importación
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,46 +16,54 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// ¡Mira! Aquí también usamos @Component para que Spring Boot guarde a este guardia en su caja de herramientas
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtil jwtUtil; // Nuestro fabricante de pulseras
+    private JwtUtil jwtUtil; 
 
     @Autowired
-    private UserDetailsService userDetailsService; // El servicio de Spring que busca usuarios en la BD
+    private UserDetailsService userDetailsService; 
 
-    // Este es el método que intercepta TODAS las peticiones que llegan de Angular
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Angular siempre enviará el token en una cabecera llamada "Authorization"
+        // 🌟 1. EL PASE LIBRE: Si Angular está intentando loguearse o refrescar el token, 
+        // lo dejamos pasar directo sin revisar la "pulsera" vieja.
+        String path = request.getRequestURI();
+        if (path.contains("/auth/login") || path.contains("/auth/refresh") || path.contains("/api/health")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
 
-        // 2. Revisamos si el guardia encontró la cabecera y si empieza con "Bearer " (el estándar)
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7); // Cortamos la palabra "Bearer " para quedarnos solo con el código del token
+            jwt = authHeader.substring(7);
+            
             try {
-                username = jwtUtil.extractUsername(jwt); // Usamos nuestra máquina para sacar el nombre del usuario
+                username = jwtUtil.extractUsername(jwt);
+            } catch (ExpiredJwtException e) { 
+                
+                //System.out.println("El token ha expirado: " + e.getMessage());
+                
+                // Le enviamos a Angular el código 401 exacto y detenemos la petición aquí mismo.
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("El token de acceso ha expirado");
+                return; 
+                
             } catch (Exception e) {
-                System.out.println("El token es inválido o ha expirado");
+                System.out.println("Error procesando el token: " + e.getMessage());
             }
         }
 
-        // 3. Si encontramos un usuario en el token y todavía no ha entrado al sistema...
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            
-            // Buscamos a este usuario en nuestra base de datos para ver si es real
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            // 4. Validamos que el token coincida y no esté vencido
             if (jwtUtil.validateToken(jwt, userDetails)) {
-                
-                // 5. ¡Todo está en orden! Le decimos a Spring Security que lo deje pasar
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

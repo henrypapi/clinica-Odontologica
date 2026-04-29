@@ -19,33 +19,35 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "Q2xpbmljYU9kb250b2xvZ2ljYVNlY3JldEtleVBhcmFUb2tlbnNNdXlTZWd1cm9zMjAyNg==";
 
-    // --- 1. MÉTODO PARA CREAR EL TOKEN ---
-    // Recibe el usuario (del login) y fabrica un token que dura 10 horas.
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+    private final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 5;
+    private final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24;
+
+    public String generateAccessToken(UserDetails userDetails) {
+        return createToken(new HashMap<>(), userDetails.getUsername(), ACCESS_TOKEN_VALIDITY);
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return createToken(new HashMap<>(), userDetails.getUsername(), REFRESH_TOKEN_VALIDITY);
+    }
+
+    private String createToken(Map<String, Object> claims, String subject, long validity) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getUsername()) // Guardamos el nombre de usuario
-                .setIssuedAt(new Date(System.currentTimeMillis())) // Fecha de creación
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Expira en 10 horas
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // Lo firmamos con nuestra clave secreta
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + validity))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // --- 2. MÉTODO PARA EXTRAER EL USUARIO DEL TOKEN ---
-    // Cuando Angular nos mande el token, usamos esto para saber de quién es.
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // --- 3. MÉTODO PARA VALIDAR EL TOKEN ---
-    // Revisa que el token pertenezca al usuario que lo envía y que no esté caducado.
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
-    // -- Métodos internos auxiliares --
     
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

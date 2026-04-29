@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { throwError } from 'rxjs'; // 🌟 Importante añadir esto para manejar el error
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,7 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  
-  private apiUrl = `${environment.apiUrl}/auth/login`;
+  private baseUrl = environment.apiUrl; 
 
   currentUser = signal<any>(null);
 
@@ -22,12 +22,23 @@ export class AuthService {
   }
 
   login(credenciales: any) {
-    return this.http.post(this.apiUrl, credenciales);
+    return this.http.post(`${this.baseUrl}/auth/login`, credenciales); 
   }
 
   guardarSesion(datosUsuario: any) {
     this.currentUser.set(datosUsuario); 
     localStorage.setItem('usuario_dental', JSON.stringify(datosUsuario));
+  }
+
+  refreshToken() {
+    const userGuardado = localStorage.getItem('usuario_dental');
+    if (userGuardado) {
+      const usuario = JSON.parse(userGuardado);
+      return this.http.post(`${this.baseUrl}/auth/refresh`, {
+        refreshToken: usuario.refreshToken
+      });
+    }
+    return throwError(() => new Error('No hay sesión activa para refrescar'));
   }
 
   logout() {
