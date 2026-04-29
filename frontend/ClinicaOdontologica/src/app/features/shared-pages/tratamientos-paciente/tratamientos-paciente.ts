@@ -111,8 +111,9 @@ guardarNuevoTratamiento() {
     this.pacientesService.registrarTratamiento(paqueteTratamiento).subscribe({
       next: (respuesta) => {
         alert("¡Tratamiento creado exitosamente!");
-        this.cerrarModalTratamiento();
+        
         this.cargarTratamientos(); 
+        this.cerrarModalTratamiento();
       },
       error: (err) => {
         console.error("Error al guardar el tratamiento", err);

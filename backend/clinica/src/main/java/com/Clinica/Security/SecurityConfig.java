@@ -28,7 +28,7 @@ public class SecurityConfig {
             
             // 2. Reglas de la puerta: Quién entra y quién no
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login","/error","/api/health").permitAll() // La taquilla de login es pública
+                .requestMatchers("/auth/login","/error","/api/health","/auth/refresh").permitAll() // La taquilla de login es pública
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated() // TODO lo demás (ej. odontogramas) exige token
             )

@@ -35,8 +35,15 @@ export class Login {
         next: (respuesta: any) => {
           alert('Bienvenido ' + respuesta.username); 
           this.authService.guardarSesion(respuesta);
-          
-          this.router.navigate(['/dashboard']);
+          let ruta_rol='';
+          if(respuesta.rol=='ROLE_admin'){
+            ruta_rol='admin';
+          }else{
+            if(respuesta.rol=='ROLE_empleado'){
+              ruta_rol='empleado';
+            }
+          }
+          this.router.navigate([ruta_rol +'/dashboard']);
         },
         error: (error) => {
           console.error("Error completo:", error);

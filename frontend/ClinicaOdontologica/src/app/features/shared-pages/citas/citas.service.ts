@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
@@ -12,41 +12,27 @@ export class CitasService {
   
   private apiUrl = `${environment.apiUrl}/api/citas`;
 
-
-  private getHeaders(): HttpHeaders {
-    let headers = new HttpHeaders();
-    const userGuardado = localStorage.getItem('usuario_dental');
-    
-    if (userGuardado) {
-      const usuario = JSON.parse(userGuardado);
-      if (usuario.token) {
-        headers = headers.set('Authorization', `Bearer ${usuario.token}`);
-      }
-    }
-    return headers;
-  }
-
   obtenerCitas(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
+    return this.http.get<any[]>(this.apiUrl);
   }
 
   registrarCita(datosCita: any): Observable<any> {
-    return this.http.post(this.apiUrl, datosCita, { headers: this.getHeaders() });
+    return this.http.post(this.apiUrl, datosCita);
   }
 
   obtenerOdontologos(): Observable<any[]> {
     const urlUsuarios = `${environment.apiUrl}/api/usuarios`;
-    return this.http.get<any[]>(urlUsuarios, { headers: this.getHeaders() });
+    return this.http.get<any[]>(urlUsuarios);
   }
 
   obtenerServicios(): Observable<any[]> {
     const urlServicios = `${environment.apiUrl}/api/servicios`; 
-    return this.http.get<any[]>(urlServicios, { headers: this.getHeaders() });
+    return this.http.get<any[]>(urlServicios);
   }
   
   obtenerHorarioOdontologo(idOdontologo: number, diaSemana: number): Observable<any[]> {
     const urlHorarios = `${environment.apiUrl}/api/horarios/odontologo/${idOdontologo}/dia/${diaSemana}`;
-    return this.http.get<any[]>(urlHorarios, { headers: this.getHeaders() });
+    return this.http.get<any[]>(urlHorarios);
   }
 
 }
