@@ -22,4 +22,4 @@ jobs:
         # Hacemos una petición web a tu ruta. 
         # --max-time 120 es la magia: obliga a GitHub a esperar hasta 2 minutos 
         # sin fallar, dándole tiempo de sobra a Render para encender.
-        run: curl --max-time 120 https://clinica-odontologica-1-5uyo.onrender.com/api/health
+        run: curl --max-time 300 https://clinica-odontologica-1-5uyo.onrender.com/api/health
