@@ -1,25 +1,14 @@
-name: Mantener Backend Render Activo
+name: Despertar Backend Diario
 
-# ¿Cuándo se va a ejecutar esto?
 on:
   schedule:
-    # La zona horaria de los servidores de GitHub es UTC (Perú es UTC-5)
-    # Por lo tanto, le sumamos 5 horas a nuestro horario local.
-    # Esta expresión significa: "Cada 14 minutos, entre las 12:00 y las 23:59 UTC, 
-    # y entre las 00:00 y las 03:59 UTC" (Lo que equivale de 7:00 AM a 10:59 PM en Perú).
-    - cron: '*/14 12-23,0-2 * * *'
-    
-  # Esto te permite ejecutar el bot manualmente desde GitHub si alguna vez lo necesitas
-  workflow_dispatch: 
+    - cron: '0 12 * * 1-6'
+  workflow_dispatch:
 
-# ¿Qué va a hacer?
 jobs:
-  ping-al-servidor:
-    runs-on: ubuntu-latest # Usamos un mini servidor gratuito de Linux en GitHub
+  despertar:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Llamar al endpoint de Health Check
-        # Hacemos una petición web a tu ruta. 
-        # --max-time 120 es la magia: obliga a GitHub a esperar hasta 2 minutos 
-        # sin fallar, dándole tiempo de sobra a Render para encender.
-        run: curl --max-time 300 https://clinica-odontologica-1-5uyo.onrender.com/api/health
+      - name: Ping al servidor
+        run: curl --max-time 120 https://clinica-odontologica-1-5uyo.onrender.com/api/health
