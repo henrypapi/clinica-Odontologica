@@ -1,15 +1,14 @@
-name: Mantener Backend Render Activo
+name: Despertar Backend Diario
 
 on:
   schedule:
-    - cron: '13 11 * * 1-6'
-    
-  workflow_dispatch: 
+    - cron: '0 12 * * 1-6'
+  workflow_dispatch:
 
 jobs:
-  ping-al-servidor:
+  despertar:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Llamar al endpoint de Health Check
+      - name: Ping al servidor
         run: curl --max-time 300 https://clinica-odontologica-1-5uyo.onrender.com/api/health
